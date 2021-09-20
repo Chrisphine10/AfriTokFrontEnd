@@ -1,1 +1,1 @@
-# AfriTokFrontEnd
+# AfroTokFrontEnd
