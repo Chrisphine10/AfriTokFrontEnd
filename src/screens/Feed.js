@@ -12,26 +12,25 @@ const options = {
     title: 'Share via',
     message: 'some message',
 };
-
 const shareit = async () => {
     const shareResponse = await Share.share(options);
 };
 
 const Feed = (props) => {
-    
     const sheetRef = useRef(null);
     const [pause, setPause] = useState(props.play);
     const onPlayPausePress = () => { 
         setPause(!pause);
         sheetRef.current.snapTo(1);
     };
+    const commentHeight = (80 * 13);
     const spinValue = new Animated.Value(0);
     const renderContent = () => (
         <View
           style={{
             backgroundColor: 'white',
             padding: 16,
-            zIndex: 9
+            zIndex: 9,
           }}
         >
             <View style={{flexDirection: 'row', alignContent: 'center', justifyContent: 'flex-end', marginBottom: 20 }}>
@@ -54,26 +53,25 @@ const Feed = (props) => {
                     />
                 </View>
             </View> 
-            <View>
-                <ScrollView style={{backgroundColor:"red"}}>
-                    <View>
-                        <Comments />
-                        <Comments />
-                        <Comments />
-                        <Comments />
-                        <Comments />
-                        <Comments />
-                        <Comments />
-                        <Comments />
-                        <Comments />
-                        <Comments />
-                        <Comments />
-                        <Comments />
-                        <Comments />
-                        <Comments />
-                    </View>
-                </ScrollView>
-            </View>
+            <ScrollView 
+            style={{width: '100%', height: commentHeight }}
+            scrollEventThrottle={1}
+            showsVerticalScrollIndicator={false}
+            >
+                <Comments />
+                <Comments />
+                <Comments />
+                <Comments />
+                <Comments />
+                <Comments />
+                <Comments />
+                <Comments />
+                <Comments />
+                <Comments />
+                <Comments />
+                <Comments />
+                <Comments />
+            </ScrollView>
             
         </View>
     );   
@@ -139,7 +137,7 @@ const Feed = (props) => {
                                     textShadowRadius: 1,
                                 }}
                                 onPress={() => {
-                                    sheetRef.current.snapTo(0)
+                                        sheetRef.current.snapTo(0)
                                 }
                                 }
                                 />
