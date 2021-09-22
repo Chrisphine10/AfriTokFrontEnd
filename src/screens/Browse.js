@@ -1,42 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, FlatList, Text, Dimensions, SafeAreaView, TouchableOpacity} from 'react-native';
+import { View, Image, Text, Dimensions, SafeAreaView, TouchableOpacity} from 'react-native';
 import styles from '../styles/browsestyles';
 import { Searchbar } from 'react-native-paper';
 import MasonryList from '@react-native-seoul/masonry-list';
-import test from '../../test.json';
+import Images from '../api/test/images';
 
 const Browse = () => {
 
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
-    const API_KEY = "563492ad6f91700001000001562a8e890c124dc78e84162aaa8f119c"
-    const API_URL = "https://api.pexels.com/v1/search?query=nature&orientation=portrait&size=small&per_page=20"
-
-    const getImages = async () => {
-        try {
-          const response = await fetch(API_URL,
-            {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${API_KEY}`
-                    }
-                });
-          const { photos } = await response.json();
-          return photos;
-        } catch (error) {
-          console.error(error);
-        }
-    };
+   
     useEffect(() => {
         const fetchData = async () => {
-        try {
-                const images = await getImages();
+            try {
+                const images = await Images();
                 setData(images);
                 setLoading(false);
             } catch (error) {
-                console.error(error);
+                console.log(error);
             }
         };
         fetchData();
@@ -68,13 +49,14 @@ const Browse = () => {
             <View>
                 <MasonryList
                     data={data}
-                    keyExtractor={item=>item.id.toString()}
+                    keyExtractor={(item, index) => item.id.toString() }
+                    showsVerticalScrollIndicator={false}
                     contentContainerStyle={ {
                         margin: 0,
                         backgroundColor: '#fff',
-                    }}
-                    renderItem={({ item }) => (
-                        <View>
+                    }} 
+                    renderItem={ ({item})  => (
+                        <View key={item.id} >
                             <Image
                                 source={{ uri: item.src.portrait }}
                                 style={{
@@ -85,6 +67,7 @@ const Browse = () => {
                                     resizeMode: 'cover',
 
                                 }}
+                                loading="lazy"
                                 />
                         </View>
                     )}

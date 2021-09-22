@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { StatusBar, Platform } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
+//import { createStackNavigator } from '@react-navigation/stack';
 //icons 
 import {
     MaterialCommunityIcons,
@@ -13,11 +13,11 @@ import {
 import Home from '../screens/Home';
 import Browse from '../screens/Browse';
 import New from '../screens/New';
-import Inbox from '../screens/profile/Inbox';
+import Activity from '../screens/profile/Activity';
 import Me from '../screens/profile/Me';
 
 const BottomTab = createMaterialBottomTabNavigator();
-const Stack = createStackNavigator();
+//const Stack = createStackNavigator();
 
 const Tabs = () => {
 
@@ -79,8 +79,8 @@ const Tabs = () => {
             />
 
             <BottomTab.Screen 
-            name="Inbox" 
-            component={Inbox} 
+            name="Activity" 
+            component={Activity} 
             options={{
                 tabBarLabel: 'Inbox',
                 tabBarIcon: ({ color }) => (
@@ -106,24 +106,5 @@ const Tabs = () => {
         </BottomTab.Navigator>
     )
 }
-
-const RootStackScreen = () => {
-    return (
-        <Stack.Navigator mode="modal">
-        <Stack.Screen
-          name="Main"
-          component={Tabs}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          options={{ headerShown: false }}
-          name="Post"
-          component={Post}
-        />
-        </Stack.Navigator>
-    )
-}
-
-
 
 export default Tabs;

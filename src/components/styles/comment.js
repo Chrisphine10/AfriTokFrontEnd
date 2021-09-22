@@ -36,5 +36,28 @@ export default StyleSheet.create({
         fontWeight: "800",
         fontSize: 12,
         fontFamily: 'AbelRegular',
-    }
+    },
+    notificationImage: {
+       height: 45,
+       width: 45,
+       resizeMode: 'cover',
+    },
+    notificationBold: {
+        color: 'grey',
+        fontWeight: "bold",
+        fontSize: 14,
+        fontFamily: 'AbelRegular',
+    },
+    notificationText: {
+        color: 'grey',
+        fontWeight: "800",
+        fontSize: 14,
+        fontFamily: 'AbelRegular',
+    },
+    notificationDate: {
+        color: 'grey',
+        fontWeight: "800",
+        fontSize: 14,
+        fontFamily: 'AbelRegular',
+    },
 })

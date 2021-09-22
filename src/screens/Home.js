@@ -1,16 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { View, Animated,  Text, Image } from 'react-native';
-import PageView from '@react-native-community/viewpager';
+import PageView from 'react-native-pager-view';
 import Feed from './Feed';
 import test from '../../test.json';
 import styles from '../styles/homestyles';
+import Video from '../api/test/video';
 
 const PagerView = Animated.createAnimatedComponent(PageView);
 
 const Home = () => {
 
     const [tab, setTab] = useState(1);
-    const [active, setActive] = useState(0);
+    const [data, setData] = useState(false);
+    const [active, setActive] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
+    
+    useEffect(() => {
+        const fetchData = async () => {
+        try {
+                const videos = await Video();
+                setData(videos);
+                setIsLoading(false);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchData();
+    }, []);
+    if(isLoading) {
+        return <View style={{justifyContent: 'center', alignContent:'center', textAlign: 'center', height: '100%'}}><Text>Loading...</Text></View>;
+    }
     return (
         <View style={{backgroundColor: 'black', marginTop: 20}}>
             <View style={styles.header}>
@@ -44,11 +64,22 @@ const Home = () => {
             initialPage={0}
             orientation= "vertical"
             >
-               {test.feed.map(item => ( 
-                <View key={item.id}>
-                    <Feed item={item.uri} music={item.music} tags={item.tags} username={item.username} play={Number(item.id) === active} />
-                </View>
-                ))}
+            {data.map((item) => 
+                  (
+                      item.video_files.map(video => (
+                        <View key={video.id}>
+                            <Feed 
+                                item={video.link} 
+                                music={video.id}
+                                tags={video.file_type} 
+                                username={video.file_type} 
+                                play={Number(video.id) === active} 
+                            />
+                        </View>
+                      ))
+                    )
+               )
+            }
             </PagerView>
         </View>
     )

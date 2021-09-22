@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View,  ScrollView, Share, Text, Button, Animated, Easing, TouchableWithoutFeedback } from 'react-native';
+import { View, ScrollView, Share, Text, Animated, Easing, TouchableWithoutFeedback } from 'react-native';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Video } from 'expo-av';
 import styles from '../styles/feedstyles';
@@ -104,6 +104,7 @@ const Feed = (props) => {
                     resizeMode="cover"
                     shouldPlay={pause}
                     isLooping
+                    loading="lazy"
                     style={{
                         width: '100%',
                         height: '100%',

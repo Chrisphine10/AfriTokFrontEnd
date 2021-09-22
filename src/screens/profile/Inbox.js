@@ -4,7 +4,7 @@ import { View, Text, TouchableOpacity} from 'react-native';
 const Inbox = () => {
     return (
         <View>
-            <TouchableOpacity>
+            <TouchableOpacity style={{alignItems:"center"}}>
                 <Text>Inbox</Text>
             </TouchableOpacity>
         </View>
