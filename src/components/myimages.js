@@ -10,13 +10,17 @@ const MyImages = () => {
         const fetchData = async () => {
             try {
                 const images = await Images();
-                setData(images);
+                setData(await images);
                 setLoading(false);
             } catch (error) {
                 console.log(error);
             }
+            
         };
         fetchData();
+        return function cleanup() {
+            console.log('I am in cleanup function');
+        };
     }, []);
     if(isLoading) {
         return <View><Text>Loading...</Text></View>;
@@ -36,7 +40,6 @@ const MyImages = () => {
                     <Image
                         source={{ uri: item.src.portrait }}
                         style={{
-                            margin: 0.5,
                             width: Dimensions.get('window').width/3.05, 
                             height: Dimensions.get('window').width * 0.75,
                             borderRadius: 5,

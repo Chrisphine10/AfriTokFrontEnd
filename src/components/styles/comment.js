@@ -60,4 +60,10 @@ export default StyleSheet.create({
         fontSize: 14,
         fontFamily: 'AbelRegular',
     },
+    dateText: {
+        color: 'grey',
+        fontWeight: "800",
+        fontSize: 14,
+        fontFamily: 'AbelRegular',
+    }
 })

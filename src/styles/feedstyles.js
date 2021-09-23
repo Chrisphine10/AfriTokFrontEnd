@@ -21,9 +21,9 @@ export default StyleSheet.create({
         fontFamily: 'AbelRegular',
         padding: 5,
         margin: 5,
-        borderColor: 'red',
+        borderColor: 'grey',
         borderRadius: 5,
-        backgroundColor: 'blue',
+        borderWidth: 1,
     },
     rightContent: {
         position: 'absolute',

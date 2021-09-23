@@ -207,8 +207,12 @@ const Feed = (props) => {
                     <Text 
                     numberOfLines={4}
                     style={styles.text}
-                    >{props.tags}</Text></View>
-                <View style={styles.sauti}>
+                    >{props.tags}</Text>
+                </View>
+                <TouchableOpacity 
+                style={styles.sauti}
+                onPress={pressAlbum}
+                >
                     <View style={{flexDirection: 'column'}}>
                         <Text 
                         style={styles.text}
@@ -222,7 +226,7 @@ const Feed = (props) => {
                             {props.music}
                         </Text>
                     </View>
-                </View>
+                </TouchableOpacity>
             </View>
                             
             <BottomSheet

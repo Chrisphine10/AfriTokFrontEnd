@@ -14,12 +14,18 @@ function MeStack() {
             name="Home" component={Home}
              />
         <Stack.Screen 
-            options={{ headerShown: false }} 
+            options={{ 
+              headerShown: false,
+              tabBarVisible: false,
+            }} 
             name="User Profile" 
             component={UserProfile}
              />
         <Stack.Screen 
-            options={{ headerShown: false }}
+            options={{ 
+              headerShown: false,
+              tabBarVisible: false,
+            }}
             name="Album" 
             component={Album}
              />

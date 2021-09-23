@@ -13,11 +13,13 @@ function MeStack() {
     return (
       <Stack.Navigator>
         <Stack.Screen 
-            options={{ headerShown: false }} 
+            options={{ 
+              headerShown: false,
+            }} 
             name="Me" component={Me}
              />
         <Stack.Screen 
-            name="ProfileEdit" 
+            name="Profile Edit" 
             component={ProfileEdit}
              />
         <Stack.Screen 

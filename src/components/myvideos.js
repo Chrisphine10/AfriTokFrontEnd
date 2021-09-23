@@ -10,14 +10,18 @@ const MyVideos = () => {
         const fetchData = async () => {
             try {
                 const images = await Images();
-                setData(images);
+                setData(await images);
                 setLoading(false);
             } catch (error) {
                 console.log(error);
             }
         };
         fetchData();
-    }, []);
+        return function cleanup() {
+        console.log('I am in cleanup function');
+        fetchData.abort();
+        };
+    }, []); 
     if(isLoading) {
         return <View><Text>Loading...</Text></View>;
     }

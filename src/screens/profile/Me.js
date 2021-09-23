@@ -39,7 +39,7 @@ const Me = ({ navigation }) => {
         { key: 'second', title: 'Videos' },
     ]);
     const pressProfileEdit = () => {
-        navigation.navigate("ProfileEdit");
+        navigation.navigate("Profile Edit");
     };
     const pressFriends = () => {
         navigation.navigate("Friend");
