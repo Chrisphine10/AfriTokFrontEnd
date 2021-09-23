@@ -5,11 +5,13 @@ import { Searchbar } from 'react-native-paper';
 import MasonryList from '@react-native-seoul/masonry-list';
 import Images from '../api/test/images';
 
-const Browse = () => {
+const Browse = ({ navigation }) => {
 
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
-   
+    const pressSearch = () => {
+        navigation.navigate("Search");
+    }
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -28,9 +30,7 @@ const Browse = () => {
     return (
         <SafeAreaView style={styles.AndroidSafeArea}>
             <TouchableOpacity
-            onPress={() => {
-                console.warn('Search Pressed')
-            }}
+            onPress={pressSearch}
             style={styles.search}>
                 <Searchbar
                     style={{

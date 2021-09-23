@@ -5,21 +5,17 @@ import { Picker } from '@react-native-community/picker';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Avatar } from 'react-native-paper';
 import MyVideos from '../../components/myvideos';
-import MyImages, { myLength } from '../../components/myimages';
+import MyImages from '../../components/myimages';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
 const FirstRoute = () => (
-    <ScrollView>
-        <MyImages />
-    </ScrollView>
+    <MyImages />
 );
   
 const SecondRoute = () => (
-    <ScrollView>
-        <MyVideos />
-    </ScrollView>
+    <MyVideos />
 );
-  
+
 const renderScene = SceneMap({
     first: FirstRoute,
     second: SecondRoute,
@@ -29,11 +25,12 @@ const renderTabBar = props => (
     <TabBar
       {...props}
       indicatorStyle={{ backgroundColor: 'black' }}
-      style={{ backgroundColor: 'white', color: 'black' }}
+      style={styles.tabBar}
+      contentContainerStyle={styles.contained}
     />
 );
 
-const Me = () => {
+const Me = ({ navigation }) => {
     const layout = useWindowDimensions();
     const [selectedValue, setSelectedValue] = useState("Account1");
     const [index, setIndex] = useState(0);
@@ -41,13 +38,29 @@ const Me = () => {
         { key: 'first', title: 'Images' },
         { key: 'second', title: 'Videos' },
     ]);
-
+    const pressProfileEdit = () => {
+        navigation.navigate("ProfileEdit");
+    };
+    const pressFriends = () => {
+        navigation.navigate("Friend");
+    };
+    const pressSetting = () => {
+        navigation.navigate("Setting");
+    };
+    const pressFavourite = () => {
+        navigation.navigate("Favourite");
+    };
+    const pressFollow = () => {
+        navigation.navigate("Follow");
+    };
     return (
         <SafeAreaView style={styles.AndroidSafeArea}>
             <View style={styles.container}>
-                <View style={{}}>
+                <TouchableOpacity
+                onPress={pressFriends}
+                >
                     <MaterialCommunityIcons size={30} name="account-multiple-plus" color="#000" />
-                </View>
+                </TouchableOpacity>
                 <Picker
                     selectedValue={selectedValue}
                     style={{ height: 50, width: 150 }}
@@ -56,12 +69,18 @@ const Me = () => {
                     <Picker.Item label="Account1" value="Account1" />
                     <Picker.Item label="Account2" value="Account2" />
                 </Picker>
-                <View style={{}}>
-                    <MaterialCommunityIcons size={30} name="dots-horizontal-circle-outline" color="#000" />
-                </View>
+                <TouchableOpacity 
+                onPress={pressProfileEdit}
+                style={{}}>
+                    <MaterialCommunityIcons 
+                    size={30} 
+                    name="dots-horizontal-circle-outline" color="#000" 
+                    onPress={pressSetting}
+                    />
+                </TouchableOpacity>
             </View>
             <ScrollView
-                    contentContainerStyle={{height: layout.height + 220}}
+                    contentContainerStyle={{height: layout.height * 3.1}}
                     showsHorizontalScrollIndicator={false}
                     scrollToOverflowEnabled={true}
                     scrollEventThrottle={16}
@@ -76,32 +95,40 @@ const Me = () => {
                     <Text style={styles.username}>@Pheene10</Text>
                 </View>
                 <View style={styles.follow}>
-                    <View style={styles.textAlign}>
+                    <TouchableOpacity 
+                    onPress={pressFollow}
+                    style={styles.textAlign}>
                         <Text style={styles.number}>14</Text>
                         <Text style={styles.text}>Following</Text>
-                    </View>
-                    <View style={styles.textAlign}>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                    onPress={pressFollow}
+                    style={styles.textAlign}>
                         <Text style={styles.number}>38</Text>
                         <Text style={styles.text}>Followers</Text>
-                    </View>
-                    <View style={styles.textAlign}>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.textAlign}>
                         <Text style={styles.number}>91</Text>
                         <Text style={styles.text}>Likes</Text>
-                    </View>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.follow}>
-                    <View>
+                    <TouchableOpacity
+                        onPress={pressProfileEdit}
+                    >
                         <Text style={styles.edit}>Edit Profile</Text>
-                    </View>
-                    <View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={pressFavourite}
+                    >
                         <MaterialCommunityIcons style={styles.bookmark} size={30} name="bookmark-plus-outline" color="#000" />
-                    </View>
+                    </TouchableOpacity>
                 </View>
                 <View>
                     <Text style={styles.bio}>Bio Test</Text>
                 </View>
                     <TabView
-                    contentContainerStyle={styles.container}
+                    contentContainerStyle={styles.contained}
                     lazy
                     navigationState={{ index, routes }}
                     renderScene={renderScene}

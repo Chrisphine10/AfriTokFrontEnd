@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, ScrollView, Share, Text, Animated, Easing, TouchableWithoutFeedback } from 'react-native';
+import { View, ScrollView, Share, Text, Animated, Easing, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Video } from 'expo-av';
 import styles from '../styles/feedstyles';
@@ -17,6 +17,12 @@ const shareit = async () => {
 };
 
 const Feed = (props) => {
+    const pressAlbum = () => {
+        props.navigation.navigate("Album");
+    };
+    const pressUser = () => {
+        props.navigation.navigate("User Profile");
+    };
     const sheetRef = useRef(null);
     const [pause, setPause] = useState(props.play);
     const onPlayPausePress = () => { 
@@ -114,7 +120,7 @@ const Feed = (props) => {
                 />
             </TouchableWithoutFeedback>
             <View style={styles.rightContent}>
-                <View style={styles.icons}>
+                <TouchableOpacity style={styles.icons}>
                     <MaterialCommunityIcons 
                                 name="heart" 
                                 size={38} 
@@ -126,8 +132,8 @@ const Feed = (props) => {
                                 }}
                                 />
                     <Text style={styles.text}>564</Text>
-                </View>
-                <View style={styles.icons}>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.icons}>
                     <MaterialCommunityIcons 
                                 name="comment-processing" 
                                 size={38} 
@@ -143,8 +149,8 @@ const Feed = (props) => {
                                 }
                                 />
                     <Text style={styles.text}>432</Text>
-                </View>
-                <View style={styles.icons}>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.icons}>
                     <AntDesign 
                                 name="sharealt" 
                                 size={38} 
@@ -157,8 +163,10 @@ const Feed = (props) => {
                                 onPress={shareit}
                                 />
                     <Text style={styles.text}>Share</Text>
-                </View>
-                <View style={styles.avatar}>  
+                </TouchableOpacity>
+                <TouchableOpacity 
+                onPress={pressAlbum}
+                style={styles.avatar}>  
                     <Animated.View
                     style={{
                     borderRadius: 50,
@@ -176,15 +184,24 @@ const Feed = (props) => {
                         source={ require('../../assets/images/test1.jpg')}
                         />
                     </Animated.View>
-                </View>
+                </TouchableOpacity>
             </View>
             <View style={styles.leftContent}>
-                <View style={styles.user}>        
-                    <Avatar.Image
-                    size={38}
-                    source={ require('../../assets/images/test4.jpg')}
-                    />
-                <Text style={styles.text}>{props.username}</Text><Text style={styles.followText}>Follow</Text>
+                <View style={{flexDirection: 'row', flexWrap: 'wrap', alignContent: 'center'}}>
+                    <TouchableOpacity 
+                    onPress={pressUser}
+                    style={styles.user}>        
+                        <Avatar.Image
+                        size={38}
+                        source={ require('../../assets/images/test4.jpg')}
+                        />
+                    </TouchableOpacity>
+                    <View>
+                        <Text style={styles.username}>{props.username}</Text>
+                    </View>
+                    <TouchableOpacity>
+                        <Text style={styles.followText}>Follow</Text>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.tag}>
                     <Text 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity} from 'react-native';
 
-const ProfileEdit = () => {
+const Follow = () => {
     return (
         <View>
             <TouchableOpacity style={{alignItems:"center"}}>
@@ -11,4 +11,4 @@ const ProfileEdit = () => {
     )
 }
 
-export default ProfileEdit;
+export default Follow;

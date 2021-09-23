@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, Text, Dimensions, TouchableOpacity} from 'react-native';
+import { View, Image, ScrollView, Text, Dimensions, TouchableOpacity} from 'react-native';
 import MasonryList from '@react-native-seoul/masonry-list';
 import Images from '../api/test/images';
 
@@ -29,7 +29,6 @@ const MyImages = () => {
             keyExtractor={(item, index) => item.id.toString() }
             showsVerticalScrollIndicator={false}
             contentContainerStyle={ {
-                margin: 0,
                 backgroundColor: '#fff',
             }}
             renderItem={ ({item})  => (

@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { StatusBar, Platform } from 'react-native';
-//import { createStackNavigator } from '@react-navigation/stack';
-//icons 
 import {
     MaterialCommunityIcons,
     AntDesign,
@@ -10,11 +8,11 @@ import {
 } from '@expo/vector-icons';
 
 //components
-import Home from '../screens/Home';
-import Browse from '../screens/Browse';
+import HomeStack from './HomeStack';
 import New from '../screens/New';
-import Activity from '../screens/profile/Activity';
-import Me from '../screens/profile/Me';
+import MeStack from './MeStack';
+import InboxStack from './InboxStack';
+import SearchStack from './SearchStack';
 
 const BottomTab = createMaterialBottomTabNavigator();
 //const Stack = createStackNavigator();
@@ -44,22 +42,30 @@ const Tabs = () => {
         activeColor={home ? '#fff' : '#000'}
         >
             <BottomTab.Screen 
-            name="Home" component={Home}
-            listeners={{
-                focus: () => setHome(true),
-                blur: () => setHome(false),
-              }}
-              options={{
-                tabBarLabel: 'Home',
-                tabBarIcon: ({ color }) => (
-                  <FontAwesome name="home" size={24} color={color} />
-                ),
-              }}
+            name="HomeFeed" component={HomeStack}
+            listeners={({ navigation, route }) => ({
+              tabPress: e => {
+                navigation.navigate(route.name);
+              },
+              focus: () => setHome(true),
+              blur: () => setHome(false),
+            })}
+            options={{
+              tabBarLabel: 'Home',
+              tabBarIcon: ({ color }) => (
+                <FontAwesome name="home" size={24} color={color} />
+              ),
+            }}
             />
 
             <BottomTab.Screen 
             name="Browse" 
-            component={Browse}
+            component={SearchStack}
+            listeners={({ navigation, route }) => ({
+              tabPress: e => {
+                navigation.navigate(route.name);
+              },
+            })}
             options={{
                 tabBarLabel: 'Browse',
                 tabBarIcon: ({ color }) => (
@@ -70,6 +76,11 @@ const Tabs = () => {
             <BottomTab.Screen 
             name="New" 
             component={New}
+            listeners={({ navigation, route }) => ({
+              tabPress: e => {
+                navigation.navigate(route.name);
+              },
+            })}
             options={{
                 tabBarLabel: '',
                 tabBarIcon: ({ color }) => (
@@ -79,8 +90,13 @@ const Tabs = () => {
             />
 
             <BottomTab.Screen 
-            name="Activity" 
-            component={Activity} 
+            name="Activities" 
+            component={InboxStack} 
+            listeners={({ navigation, route }) => ({
+              tabPress: e => {
+                navigation.navigate(route.name);
+              },
+            })}
             options={{
                 tabBarLabel: 'Inbox',
                 tabBarIcon: ({ color }) => (
@@ -94,10 +110,15 @@ const Tabs = () => {
             />
 
             <BottomTab.Screen 
-            name="Me" 
-            component={Me} 
+            name="Profile" 
+            component={MeStack} 
+            listeners={({ navigation, route }) => ({
+              tabPress: e => {
+                navigation.navigate(route.name);
+              },
+            })}
             options={{
-                tabBarLabel: 'Me',
+                tabBarLabel: 'Profile',
                 tabBarIcon: ({ color }) => (
                   <AntDesign name="user" size={24} color={color} />
                 ),

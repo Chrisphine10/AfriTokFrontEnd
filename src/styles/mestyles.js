@@ -93,12 +93,12 @@ export default StyleSheet.create({
          zIndex: 1,
       },
       tabBar: {
-         flexDirection: 'row',
-         paddingTop: 16,
+         backgroundColor: 'grey', 
+         color: '#000',
+         fontFamily: 'AbelRegular',
       },
-      tabItem: {
-         flex: 1,
-         alignItems: 'center',
-         padding: 16,
-     },
+      contained:{
+         color: '#000',
+         fontFamily: 'AbelRegular',
+      }
 });

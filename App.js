@@ -12,8 +12,7 @@ export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   if(fontsLoaded){
     return (
-      <Routes
-      />
+      <Routes/>
     );
   }
   else {

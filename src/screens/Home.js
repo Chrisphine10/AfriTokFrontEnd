@@ -8,11 +8,11 @@ import Video from '../api/test/video';
 
 const PagerView = Animated.createAnimatedComponent(PageView);
 
-const Home = () => {
-
+const Home = ({ navigation }) => {
+   
     const [tab, setTab] = useState(1);
     const [data, setData] = useState(false);
-    const [active, setActive] = useState(false);
+    const [active, setActive] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
 
     
@@ -69,11 +69,12 @@ const Home = () => {
                       item.video_files.map(video => (
                         <View key={video.id}>
                             <Feed 
+                                navigation={navigation}
                                 item={video.link} 
                                 music={video.id}
                                 tags={video.file_type} 
                                 username={video.file_type} 
-                                play={Number(video.id) === active} 
+                                play={(video.id) ? active : !active } 
                             />
                         </View>
                       ))

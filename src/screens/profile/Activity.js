@@ -5,8 +5,11 @@ import Notifications from '../../components/notification';
 import { Picker } from '@react-native-community/picker';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const Activity = () => {
+const Activity = ({ navigation }) => {
     const [selectedValue, setSelectedValue] = useState("Activity");
+    const pressInbox = () => {
+        navigation.navigate("Inbox");
+    };
     return (
         <SafeAreaView style={styles.AndroidSafeArea}>
             <View style={styles.container}>
@@ -21,9 +24,11 @@ const Activity = () => {
                     <Picker.Item label="Mentions" value="Mentions" />
                     <Picker.Item label="AfroTok" value="AfroTok" />
                 </Picker>
-                <View style={{}}>
+                <TouchableOpacity
+                onPress={pressInbox}
+                style={{}}>
                     <MaterialCommunityIcons size={30} name="message-arrow-right" color="#000" />
-                </View>
+                </TouchableOpacity>
             </View>
             <View>
                 <ScrollView style={styles.activity}>
