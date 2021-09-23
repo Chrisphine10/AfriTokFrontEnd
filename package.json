@@ -8,10 +8,7 @@
         "eject": "expo eject"
     },
     "dependencies": {
-        "@emotion/react": "^11.4.1",
-        "@emotion/styled": "^11.3.0",
         "@expo/vector-icons": "^12.0.5",
-        "@mui/material": "^5.0.0",
         "@react-native-community/picker": "^1.8.1",
         "@react-native-community/viewpager": "^5.0.11",
         "@react-native-seoul/masonry-list": "^1.0.8",
