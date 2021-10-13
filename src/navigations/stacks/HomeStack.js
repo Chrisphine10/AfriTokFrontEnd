@@ -1,8 +1,8 @@
 import React , { useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import Home from '../screens/Home';
-import UserProfile from '../screens/profile/UserProfile';
-import Album from '../screens/post/Album';
+import Home from '../../screens/Home';
+import UserProfile from '../../screens/profile/UserProfile';
+import Album from '../../screens/post/Album';
 
 const Stack = createStackNavigator();
 
@@ -13,19 +13,11 @@ function MeStack() {
             options={{ headerShown: false }} 
             name="Home" component={Home}
              />
-        <Stack.Screen 
-            options={{ 
-              headerShown: false,
-              tabBarVisible: false,
-            }} 
+        <Stack.Screen  
             name="User Profile" 
             component={UserProfile}
              />
         <Stack.Screen 
-            options={{ 
-              headerShown: false,
-              tabBarVisible: false,
-            }}
             name="Album" 
             component={Album}
              />

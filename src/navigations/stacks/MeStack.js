@@ -1,11 +1,11 @@
 import React , { useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import Friend from '../screens/profile/Friend';
-import ProfileEdit from '../screens/profile/Edit/';
-import Me from '../screens/profile/Me';
-import Setting from '../screens/setting/Setting';
-import Favourite from '../screens/profile/Favourite';
-import Follow from '../screens/profile/Follow';
+import Friend from '../../screens/profile/Friend';
+import ProfileEdit from '../../screens/profile/Edit/';
+import Me from '../../screens/profile/Me';
+import Setting from '../../screens/setting/Setting';
+import Favourite from '../../screens/profile/Favourite';
+import Follow from '../../screens/profile/Follow';
 
 const Stack = createStackNavigator();
 

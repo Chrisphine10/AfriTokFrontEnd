@@ -1,7 +1,7 @@
 import React , { useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import Activity from '../screens/profile/Activity'
-import Inbox from '../screens/profile/Inbox';
+import Activity from '../../screens/profile/Activity'
+import Inbox from '../../screens/profile/Inbox';
 
 const Stack = createStackNavigator();
 

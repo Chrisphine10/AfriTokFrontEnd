@@ -1,6 +1,7 @@
+const API_KEY = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYzNjAyNzEwNn0.6Gt5Pn3Y-86Tyh--S6vk_G4DgWSLkafUvkVgjFI4EkQrM6fOifjV3YhYBXDXBBnSq32ExjFdNM8-bOuphkIT7Q"
+const API_URL = "http://afritok.co:8080/api/v1/videos"
+
 const Videos = async () => {
-    const API_KEY = "563492ad6f91700001000001562a8e890c124dc78e84162aaa8f119c"
-    const API_URL = "https://api.pexels.com/videos/search?query=fire&orientation=portrait&size=small&per_page=1"
 
     try {
       const response = await fetch(API_URL,
@@ -12,7 +13,7 @@ const Videos = async () => {
                 'Authorization': `Bearer ${API_KEY}`
                 }
             });
-      const { videos } = await response.json();
+      const videos = await response.json();
       return videos;
     } catch (error) {
       console.error(error);

@@ -1,43 +1,21 @@
 import React, { useState } from 'react';
-import { View, Animated, Text, useWindowDimensions, ScrollView, SafeAreaView, TouchableOpacity} from 'react-native';
+import { View, Animated, Text, useWindowDimensions, ScrollView, SafeAreaView, TouchableWithoutFeedback, TouchableOpacity} from 'react-native';
 import styles from '../../styles/mestyles';
 import { Picker } from '@react-native-community/picker';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Avatar } from 'react-native-paper';
 import MyVideos from '../../components/myvideos';
 import MyImages from '../../components/myimages';
-import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import StickyParallaxHeader from 'react-native-sticky-parallax-header';
 
-const FirstRoute = () => (
-    <MyImages />
-);
-  
-const SecondRoute = () => (
-    <MyVideos />
-);
 
-const renderScene = SceneMap({
-    first: FirstRoute,
-    second: SecondRoute,
-});
-
-const renderTabBar = props => (
-    <TabBar
-      {...props}
-      indicatorStyle={{ backgroundColor: 'black' }}
-      style={styles.tabBar}
-      contentContainerStyle={styles.contained}
-    />
-);
-
-const Me = ({ navigation }) => {
+const Me = ({ navigation, props }) => {
     const layout = useWindowDimensions();
     const [selectedValue, setSelectedValue] = useState("Account1");
-    const [index, setIndex] = useState(0);
-    const [routes] = useState([
-        { key: 'first', title: 'Images' },
-        { key: 'second', title: 'Videos' },
-    ]);
+   
+    const { event, ValueXY } = Animated
+    const scrollY = new ValueXY()
+
     const pressProfileEdit = () => {
         navigation.navigate("Profile Edit");
     };
@@ -53,39 +31,11 @@ const Me = ({ navigation }) => {
     const pressFollow = () => {
         navigation.navigate("Follow");
     };
-    return (
-        <SafeAreaView style={styles.AndroidSafeArea}>
-            <View style={styles.container}>
-                <TouchableOpacity
-                onPress={pressFriends}
-                >
-                    <MaterialCommunityIcons size={30} name="account-multiple-plus" color="#000" />
-                </TouchableOpacity>
-                <Picker
-                    selectedValue={selectedValue}
-                    style={{ height: 50, width: 150 }}
-                    onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-                >
-                    <Picker.Item label="Account1" value="Account1" />
-                    <Picker.Item label="Account2" value="Account2" />
-                </Picker>
-                <TouchableOpacity 
-                onPress={pressProfileEdit}
-                style={{}}>
-                    <MaterialCommunityIcons 
-                    size={30} 
-                    name="dots-horizontal-circle-outline" color="#000" 
-                    onPress={pressSetting}
-                    />
-                </TouchableOpacity>
-            </View>
-            <ScrollView
-                    contentContainerStyle={{height: layout.height * 3.1}}
-                    showsHorizontalScrollIndicator={false}
-                    scrollToOverflowEnabled={true}
-                    scrollEventThrottle={16}
-                    snapToAlignment="end"
-                >
+
+   
+    const renderForeground = () => (
+        <View style={styles.foreground}>
+            <Animated.View>
                 <View style={styles.avatar}>
                     <Avatar.Image
                     size={100}
@@ -127,16 +77,78 @@ const Me = ({ navigation }) => {
                 <View>
                     <Text style={styles.bio}>Bio Test</Text>
                 </View>
-                    <TabView
-                    contentContainerStyle={styles.contained}
-                    lazy
-                    navigationState={{ index, routes }}
-                    renderScene={renderScene}
-                    onIndexChange={setIndex}
-                    initialLayout={0}
-                    renderTabBar={renderTabBar}
-                    /> 
-            </ScrollView>
+            </Animated.View>
+        </View>
+    )
+    
+    const renderHeader = () => (
+        <View style={styles.headerWrapper}>
+            <Animated.View>
+                <View style={styles.container}>
+                    <TouchableOpacity
+                    onPress={pressFriends}
+                    >
+                        <MaterialCommunityIcons size={30} name="account-multiple-plus" color="#000" />
+                    </TouchableOpacity>
+                    <Picker
+                        selectedValue={selectedValue}
+                        style={{ height: 50, width: 150 }}
+                        onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                    >
+                        <Picker.Item label="Account1" value="Account1" />
+                        <Picker.Item label="Account2" value="Account2" />
+                    </Picker>
+                    <TouchableOpacity 
+                    onPress={pressProfileEdit}
+                    >
+                        <MaterialCommunityIcons 
+                        size={30} 
+                        name="dots-horizontal-circle-outline" color="#000" 
+                        onPress={pressSetting}
+                        />
+                    </TouchableOpacity>
+                </View>
+            </Animated.View>
+        </View>
+    )
+    
+    return (
+        <SafeAreaView style={styles.AndroidSafeArea}>
+                <StickyParallaxHeader
+                    headerType="TabbedHeader"
+                    foreground={renderForeground}
+                    header={renderHeader}
+                    transparentHeader={false}
+                    parallaxHeight={350}
+                    headerHeight={50}
+                    snapValue={0}
+                    snapToEdge={false}
+                    hasBorderRadius={false}
+                    backgroundColor="white"
+                    //headerSize={() => {}}
+                    //onEndReached={() => {}}
+                    scrollEvent={event(
+                        [{ nativeEvent: { contentOffset: { y: scrollY.y } } }],
+                        { useNativeDriver: false }
+                    )}
+                    tabs={[
+                    {
+                        title: "Yours",
+                        icon: <MaterialCommunityIcons size={30} name="view-grid" color="#000" />,
+                        content: <MyImages />
+                    },
+                    {
+                        title: "Liked",
+                        icon: <MaterialCommunityIcons size={30} name="heart-multiple" color="#000" />,
+                        content: <MyVideos />
+                    }
+                    ]}
+                    tabTextStyle={styles.tabText}
+                    tabTextContainerStyle={styles.tabTextContainerStyle}
+                    tabTextContainerActiveStyle={styles.tabTextContainerActiveStyle}
+                    tabsWrapperStyle={styles.tabsWrapper}
+                    >
+                </StickyParallaxHeader>
         </SafeAreaView>
     )
 }

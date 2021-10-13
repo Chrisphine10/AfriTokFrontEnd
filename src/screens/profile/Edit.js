@@ -5,7 +5,7 @@ const ProfileEdit = () => {
     return (
         <View>
             <TouchableOpacity style={{alignItems:"center"}}>
-                <Text>Inbox</Text>
+            
             </TouchableOpacity>
         </View>
     )

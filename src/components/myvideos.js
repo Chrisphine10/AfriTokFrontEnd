@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, Text, Dimensions, TouchableOpacity} from 'react-native';
+import { View, Image, Text, Dimensions, TouchableWithoutFeedback } from 'react-native';
 import MasonryList from '@react-native-seoul/masonry-list';
-import Images from '../api/test/images';
+import Video from '../api/test/video';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const MyVideos = () => {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
+    
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const images = await Images();
-                setData(await images);
+                const videos = await Video();
+                setData(await videos);
                 setLoading(false);
             } catch (error) {
                 console.log(error);
@@ -19,7 +21,6 @@ const MyVideos = () => {
         fetchData();
         return function cleanup() {
         console.log('I am in cleanup function');
-        fetchData.abort();
         };
     }, []); 
     if(isLoading) {
@@ -36,20 +37,19 @@ const MyVideos = () => {
                 backgroundColor: '#fff',
             }}
             renderItem={ ({item})  => (
-                <View key={item.id}>
+                <TouchableWithoutFeedback  key={item.id}>
                     <Image
-                        source={{ uri: item.src.portrait }}
+                        source={{uri: item.screenshot}}
                         style={{
-                            margin: 0.5,
+                            margin: 1,
                             width: Dimensions.get('window').width/3.05, 
-                            height: Dimensions.get('window').width * 0.75,
+                            height: Dimensions.get('window').width * 0.35,
                             borderRadius: 5,
                             resizeMode: 'cover',
 
                         }}
-                        loading="lazy"
                         />
-                </View>
+                </TouchableWithoutFeedback >
             )}
             numColumns={3}
         />

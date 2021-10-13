@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { StatusBar, Platform } from 'react-native';
+import { View, StatusBar, Platform } from 'react-native';
 import {
     MaterialCommunityIcons,
     AntDesign,
@@ -8,18 +8,18 @@ import {
 } from '@expo/vector-icons';
 
 //components
-import HomeStack from './HomeStack';
-import New from '../screens/New';
-import MeStack from './MeStack';
-import InboxStack from './InboxStack';
-import SearchStack from './SearchStack';
+import HomeStack from './stacks/HomeStack';
+import CameraStack from './stacks/CameraStack';
+import MeStack from './stacks/MeStack';
+import InboxStack from './stacks/InboxStack';
+import SearchStack from './stacks/SearchStack';
+//import { RecordStack } from '../screens/login/index';
 
 const BottomTab = createMaterialBottomTabNavigator();
-//const Stack = createStackNavigator();
 
 const Tabs = () => {
-
     const [home, setHome] = useState(true);
+    const [tabVisibility, setTabVisibility] = useState(null);
     StatusBar.setBarStyle('dark-content');
     if (Platform.OS === 'android') StatusBar.setBackgroundColor('#fff');
 
@@ -36,10 +36,12 @@ const Tabs = () => {
         <BottomTab.Navigator
         shifting={true} 
         barStyle={{
-            backgroundColor: home ? '#000' : '#fff'
+            backgroundColor: home ? '#000' : '#fff',
+            display: tabVisibility
         }}
         initialRouteName="Home"
         activeColor={home ? '#fff' : '#000'}
+      
         >
             <BottomTab.Screen 
             name="HomeFeed" component={HomeStack}
@@ -74,19 +76,20 @@ const Tabs = () => {
               }}
             />
             <BottomTab.Screen 
-            name="New" 
-            component={New}
+            name="Camera" 
+            component={CameraStack}
             listeners={({ navigation, route }) => ({
               tabPress: e => {
                 navigation.navigate(route.name);
+                setTabVisibility('none');
               },
             })}
-            options={{
+            options={() => ({
                 tabBarLabel: '',
                 tabBarIcon: ({ color }) => (
-                    <AntDesign name="plus" size={24} color={color} style={{backgroundColor: "red", borderRadius: 5, }} />
+                    <View style={{backgroundColor: "red", borderRadius: 5,}} ><AntDesign name="plus" size={24} color={color}/></View>
                 ),
-            }}  
+            })}  
             />
 
             <BottomTab.Screen 

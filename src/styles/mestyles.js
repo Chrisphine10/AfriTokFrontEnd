@@ -2,9 +2,9 @@ import { StyleSheet, Platform, Dimensions, StatusBar } from 'react-native';
 
 export default StyleSheet.create({
     AndroidSafeArea: {
-        backgroundColor: "white",
+        flex: 1,
+        backgroundColor: "transparent",
         paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-        height: '100%',
     },
     container: {
         alignItems: "center",
@@ -27,6 +27,13 @@ export default StyleSheet.create({
         marginLeft: 70,
         padding: 10,
      },
+     followUser: {
+         alignItems: "center",
+         flexDirection: 'row',
+         flexWrap: 'wrap',
+         justifyContent: 'center',
+         padding: 10,
+      },
      edit: {
         borderWidth: 1,
         paddingLeft: 50,
@@ -82,23 +89,40 @@ export default StyleSheet.create({
         padding: 5,
         alignSelf: 'center',
      },
-      pagerView: {
-         width: '100%',
-         height: Dimensions.get("window").height - 20,
-         top: 0,
-         bottom: 0,
-         left: 0,
-         right: 0,
-         position: 'relative',
-         zIndex: 1,
-      },
-      tabBar: {
-         backgroundColor: 'grey', 
-         color: '#000',
-         fontFamily: 'AbelRegular',
-      },
       contained:{
          color: '#000',
          fontFamily: 'AbelRegular',
-      }
+      },
+      content: {
+         height: 1000,
+         marginTop: 50
+       },
+       foreground: {
+         flex: 1,
+         justifyContent: 'flex-end'
+       },
+       headerWrapper: {
+         width: '100%',
+       },
+       headerTitle: {
+         fontSize: 16,
+       },
+       tabsWrapper: {
+       },
+       tabTextContainerStyle: {
+         paddingHorizontal: 30,
+         justifyContent: "space-between",
+         backgroundColor: 'transparent',
+       },
+       tabTextContainerActiveStyle: {
+         backgroundColor: "#cd9115",
+         borderRadius: 2
+       },
+       tabText: {
+         fontSize: 15,
+         lineHeight: 20,
+         paddingHorizontal: 12,
+         color: '#000',
+         fontFamily: 'AbelRegular',
+       }
 });

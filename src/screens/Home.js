@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import { View, Animated,  Text, Image } from 'react-native';
+import { RefreshControl, View, Animated,  Text, Image } from 'react-native';
 import PageView from 'react-native-pager-view';
 import Feed from './Feed';
 import test from '../../test.json';
@@ -15,7 +15,13 @@ const Home = ({ navigation }) => {
     const [active, setActive] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
 
-    
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        wait(2000).then(() => setRefreshing(false));
+    }, []);
+
     useEffect(() => {
         const fetchData = async () => {
         try {
@@ -29,7 +35,7 @@ const Home = ({ navigation }) => {
         fetchData();
     }, []);
     if(isLoading) {
-        return <View style={{justifyContent: 'center', alignContent:'center', textAlign: 'center', height: '100%'}}><Text>Loading...</Text></View>;
+        return <View style={{justifyContent: 'center', backgroundColor:'black', alignContent:'center', textAlign: 'center', height: '100%'}}><Text>Loading...</Text></View>;
     }
     return (
         <View style={{backgroundColor: 'black', marginTop: 20}}>
@@ -62,23 +68,29 @@ const Home = ({ navigation }) => {
             <PagerView 
             style={styles.pagerView}
             initialPage={0}
+            refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+                />
+            }
             orientation= "vertical"
             >
             {data.map((item) => 
-                  (
-                      item.video_files.map(video => (
-                        <View key={video.id}>
+                   (
+                        <View key={item.id}>
                             <Feed 
                                 navigation={navigation}
-                                item={video.link} 
-                                music={video.id}
-                                tags={video.file_type} 
-                                username={video.file_type} 
-                                play={(video.id) ? active : !active } 
+                                item={item.clip} 
+                                music={item.song.name}
+                                tags={item.post} 
+                                username={item.user.login} 
+                                comments={item.comments}
+                                likes={item.likes}
+                                play={(item.id) ? active : !active } 
                             />
-                        </View>
-                      ))
-                    )
+                        </View>                  
+                   )
                )
             }
             </PagerView>

@@ -3,7 +3,7 @@ import { StyleSheet, Dimensions, Platform, StatusBar } from 'react-native';
 export default StyleSheet.create({
     AndroidSafeArea: {
         flex: 1,
-        backgroundColor: "white",
+        backgroundColor: "transparent",
         paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
     },
     search: {
@@ -49,29 +49,48 @@ export default StyleSheet.create({
      },
      words: {
         justifyContent: 'space-between'
-     },
-     sauti: {
-         position: 'absolute',
-         bottom: 35,
-         zIndex: 5,
-         paddingTop: 5,
-         paddingBottom: 5,
-         paddingHorizontal: 20,
-         backgroundColor: "yellow",
-         flexDirection: 'row',
-         flexWrap: 'wrap',
-         alignSelf: 'center',
-         borderRadius: 30,
-         flexGrow: 1, 
-         justifyContent:'center',
-         alignItems: 'center',
-     },
-     sautiText: {
+    },
+    sauti: {
+        position: 'absolute',
+        bottom: 35,
+        zIndex: 5,
+        paddingTop: 2,
+        paddingBottom: 2,
+        paddingHorizontal: 10,
+        backgroundColor: "#cd9115",
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        alignSelf: 'center',
+        borderRadius: 30,
+        flexGrow: 1, 
+        justifyContent:'center',
+        alignItems: 'center',
+    },
+    sautiText: {
         fontSize: 18,
         color: '#000',
         fontFamily: 'AbelRegular',
-     },
-     sautiIcon: {
-     }
+    },
+    sautiIcon: {
+    },
+    tabsWrapper: {
+    },
+    tabTextContainerStyle: {
+      backgroundColor: 'transparent',
+      paddingHorizontal: 30,
+      justifyContent: "space-between"
+    },
+    tabTextContainerActiveStyle: {
+      backgroundColor: "#cd9115",
+      borderRadius: 2
+    },
+    tabText: {
+      fontSize: 15,
+      lineHeight: 20,
+      paddingHorizontal: 12,
+      color: 'black',
+      color: '#fff',
+      fontFamily: 'AbelRegular',
+    }
 
 });

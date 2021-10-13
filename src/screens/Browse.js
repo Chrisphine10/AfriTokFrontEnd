@@ -58,7 +58,7 @@ const Browse = ({ navigation }) => {
                     renderItem={ ({item})  => (
                         <View key={item.id} >
                             <Image
-                                source={{ uri: item.src.portrait }}
+                                source={{ uri: item.screenshort }}
                                 style={{
                                     margin: 0.5,
                                     width: Dimensions.get('window').width/3.05, 

@@ -15,8 +15,9 @@ const options = {
 const shareit = async () => {
     const shareResponse = await Share.share(options);
 };
-
+var abbreviate = require('number-abbreviate')
 const Feed = (props) => {
+   
     const pressAlbum = () => {
         props.navigation.navigate("Album");
     };
@@ -46,7 +47,7 @@ const Feed = (props) => {
                 fontSize: 14,
                 fontFamily: 'AbelRegular',
                 alignSelf: "center"
-                }}>300 Comments</Text>
+                }}>{props.comments} Comments</Text>
                 </View>
                 <View>
                     <AntDesign 
@@ -103,14 +104,15 @@ const Feed = (props) => {
                 }
             > 
                 <Video
-                    source={{ uri: props.item }}
+                    source={{ uri: require('../../assets/big_buck_bunny.mp4') }}
                     rate={1.0}
                     volume={1.0}
                     isMuted={false}
                     resizeMode="cover"
                     shouldPlay={pause}
                     isLooping
-                    loading="lazy"
+                    //usePoster={true}
+                    progressUpdateIntervalMillis={50}
                     style={{
                         width: '100%',
                         height: '100%',
@@ -131,7 +133,7 @@ const Feed = (props) => {
                                     textShadowRadius: 1,
                                 }}
                                 />
-                    <Text style={styles.text}>564</Text>
+                    <Text style={styles.text}>{abbreviate(props.likes)}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.icons}>
                     <MaterialCommunityIcons 
@@ -148,7 +150,7 @@ const Feed = (props) => {
                                 }
                                 }
                                 />
-                    <Text style={styles.text}>432</Text>
+                    <Text style={styles.text}>{abbreviate(props.comments)}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.icons}>
                     <AntDesign 
@@ -205,7 +207,7 @@ const Feed = (props) => {
                 </View>
                 <View style={styles.tag}>
                     <Text 
-                    numberOfLines={4}
+                    numberOfLines={4} 
                     style={styles.text}
                     >{props.tags}</Text>
                 </View>

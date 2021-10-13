@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, ScrollView, Text, Dimensions, TouchableOpacity} from 'react-native';
+import { View, Image, ScrollView, Text, Dimensions, TouchableWithoutFeedback } from 'react-native';
 import MasonryList from '@react-native-seoul/masonry-list';
-import Images from '../api/test/images';
+import Video from '../api/test/video';
 
 const MyImages = () => {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const images = await Images();
-                setData(await images);
+                const videos = await Video();
+                setData(await videos);
                 setLoading(false);
             } catch (error) {
                 console.log(error);
@@ -36,19 +37,22 @@ const MyImages = () => {
                 backgroundColor: '#fff',
             }}
             renderItem={ ({item})  => (
-                <View key={item.id}>
+                <TouchableWithoutFeedback  key={item.id}>
                     <Image
-                        source={{ uri: item.src.portrait }}
+                        source={{uri: item.screenshot}}
                         style={{
                             width: Dimensions.get('window').width/3.05, 
-                            height: Dimensions.get('window').width * 0.75,
+                            height: Dimensions.get('window').width * 0.65,
                             borderRadius: 5,
                             resizeMode: 'cover',
+                            marginBottom: 1,
+                            marginTop: 1
                             
                         }}
                         loading="lazy"
                         />
-                </View>
+                        
+                </TouchableWithoutFeedback >
             )}
             numColumns={3}
         />
