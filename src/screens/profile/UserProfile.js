@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Animated, Text, useWindowDimensions, ScrollView, SafeAreaView, TouchableOpacity} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Animated, BackHandler, Text, useWindowDimensions, ScrollView, SafeAreaView, TouchableOpacity} from 'react-native';
 import styles from '../../styles/mestyles';
 import { Picker } from '@react-native-community/picker';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -19,6 +19,21 @@ const UserProfile = ({ navigation }) => {
     };
     const { event, ValueXY } = Animated
     const scrollY = new ValueXY()
+
+    //custom back for android
+    useEffect(() => {
+        function handleBackButton() {
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'Routes' }],
+            })
+          return true;
+        }
+    
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+    
+        return () => backHandler.remove();
+    }, [navigation]);
 
     const renderForeground = () => (
         <View style={styles.foreground}>
@@ -65,45 +80,46 @@ const UserProfile = ({ navigation }) => {
             </Animated.View>
         </View>
     )
-   
+    const renderHeader = () => (
+        <SafeAreaView style={styles.AndroidSafeArea}></SafeAreaView>
+     )
     
     return (
-        <SafeAreaView style={styles.AndroidSafeArea}>
             <StickyParallaxHeader
-                    headerType="TabbedHeader"
-                    foreground={renderForeground}
-                    header={null}
-                    parallaxHeight={320}
-                    headerHeight={0}
-                    snapValue={0}
-                    snapToEdge={false}
-                    hasBorderRadius={false}
-                    backgroundColor="white"
-                    //headerSize={() => {}}
-                    //onEndReached={() => {}}
-                    scrollEvent={event(
-                        [{ nativeEvent: { contentOffset: { y: scrollY.y } } }],
-                        { useNativeDriver: false }
-                    )}
-                    tabs={[
-                    {
-                        title: "Videos",
-                        icon: <MaterialCommunityIcons size={30} name="view-grid" color="#000" />,
-                        content: <MyImages />
-                    },
-                    {
-                        title: "Liked",
-                        icon: <MaterialCommunityIcons size={30} name="heart-multiple" color="#000" />,
-                        content: <MyVideos />
-                    }
-                    ]}
-                    tabTextStyle={styles.tabText}
-                    tabTextContainerStyle={styles.tabTextContainerStyle}
-                    tabTextContainerActiveStyle={styles.tabTextContainerActiveStyle}
-                    tabsWrapperStyle={styles.tabsWrapper}
-                    >
-                </StickyParallaxHeader>
-        </SafeAreaView>
+                headerType="TabbedHeader"
+                foreground={renderForeground}
+                header={renderHeader}
+                transparentHeader={false}
+                parallaxHeight={330}
+                headerHeight={0}
+                snapValue={0}
+                snapToEdge={false}
+                hasBorderRadius={false}
+                backgroundColor="white"
+                //headerSize={() => {}}
+                //onEndReached={() => {}}
+                scrollEvent={event(
+                    [{ nativeEvent: { contentOffset: { y: scrollY.y } } }],
+                    { useNativeDriver: false }
+                )}
+                tabs={[
+                {
+                    title: "Videos",
+                    icon: <MaterialCommunityIcons size={30} name="view-grid" color="#000" />,
+                    content: <MyImages />
+                },
+                {
+                    title: "Liked",
+                    icon: <MaterialCommunityIcons size={30} name="heart-multiple" color="#000" />,
+                    content: <MyVideos />
+                }
+                ]}
+                tabTextStyle={styles.tabText}
+                tabTextContainerStyle={styles.tabTextContainerStyle}
+                tabTextContainerActiveStyle={styles.tabTextContainerActiveStyle}
+                tabsWrapperStyle={styles.tabsWrapper}
+                >
+            </StickyParallaxHeader>
     )
 }
 

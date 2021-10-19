@@ -7,10 +7,10 @@ import Header from '../../components/custom/Header';
 import Button from '../../components/custom/Button';
 import TextInput from '../../components/custom/TextInput';
 import BackButton from '../../components/custom/BackButton';
-import { theme } from '../../core/theme';
 import { emailValidator } from '../../helpers/emailValidator';
 import { passwordValidator } from '../../helpers/passwordValidator';
 import { StackActions } from '@react-navigation/native';
+import styles from '../../styles/starterstyles';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' })
@@ -46,6 +46,7 @@ export default function LoginScreen({ navigation }) {
         autoCompleteType="email"
         textContentType="emailAddress"
         keyboardType="email-address"
+        style={styles.button}
       />
       <TextInput
         label="Password"
@@ -55,6 +56,7 @@ export default function LoginScreen({ navigation }) {
         error={!!password.error}
         errorText={password.error}
         secureTextEntry
+        style={styles.button}
       />
       <View style={styles.forgotPassword}>
         <TouchableOpacity
@@ -63,7 +65,11 @@ export default function LoginScreen({ navigation }) {
           <Text style={styles.forgot}>Forgot your password?</Text>
         </TouchableOpacity>
       </View>
-      <Button mode="contained" onPress={onLoginPressed}>
+      <Button 
+      mode="contained" 
+      onPress={onLoginPressed}
+      style={styles.button}
+      >
         Login
       </Button>
       <View style={styles.row}>
@@ -75,23 +81,3 @@ export default function LoginScreen({ navigation }) {
     </Background>
   )
 }
-
-const styles = StyleSheet.create({
-  forgotPassword: {
-    width: '100%',
-    alignItems: 'flex-end',
-    marginBottom: 24,
-  },
-  row: {
-    flexDirection: 'row',
-    marginTop: 4,
-  },
-  forgot: {
-    fontSize: 13,
-    color: theme.colors.secondary,
-  },
-  link: {
-    fontWeight: 'bold',
-    color: theme.colors.primary,
-  },
-})

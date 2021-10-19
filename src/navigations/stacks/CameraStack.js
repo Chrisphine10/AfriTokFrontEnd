@@ -4,6 +4,8 @@ import Record from '../../screens/camera/Record';
 import Post from '../../screens/post/Post';
 import Gallery from '../../screens/camera/Gallery';
 import Edit from '../../screens/camera/EditVideo';
+import SongsList from '../../screens/sauti/SongsList';
+import MySauti from '../../components/mysauti';
 //import Routes from './../Routes';
 
 const Stack = createStackNavigator();
@@ -27,9 +29,18 @@ function CameraStack() {
             options={{ 
               headerShown: false,
             }}
+            name="SongsList" component={SongsList}
+             />
+        <Stack.Screen 
+            options={{ 
+              headerShown: false,
+            }}
             name="Edit" component={Edit}
              />
         <Stack.Screen  
+            options={{ 
+              headerShown: false,
+            }}
             name="Post" component={Post}
              />
         

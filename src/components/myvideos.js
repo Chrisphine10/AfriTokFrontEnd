@@ -43,7 +43,7 @@ const MyVideos = () => {
                         style={{
                             margin: 1,
                             width: Dimensions.get('window').width/3.05, 
-                            height: Dimensions.get('window').width * 0.35,
+                            height: Dimensions.get('window').width * 0.65,
                             borderRadius: 5,
                             resizeMode: 'cover',
 

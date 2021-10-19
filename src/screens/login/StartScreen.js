@@ -4,6 +4,7 @@ import Logo from '../../components/custom/Logo'
 import Header from '../../components/custom/Header'
 import Button from '../../components/custom/Button'
 import Paragraph from '../../components/custom/Paragraph'
+import styles from '../../styles/starterstyles'
 
 export default function StartScreen({ navigation }) {
   return (
@@ -15,12 +16,14 @@ export default function StartScreen({ navigation }) {
       </Paragraph>
       <Button
         mode="contained"
+        style={styles.button}
         onPress={() => navigation.navigate('LoginScreen')}
       >
         Login
       </Button>
       <Button
         mode="outlined"
+        style={styles.button}
         onPress={() => navigation.navigate('RegisterScreen')}
       >
         Sign Up

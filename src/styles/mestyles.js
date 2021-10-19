@@ -2,8 +2,7 @@ import { StyleSheet, Platform, Dimensions, StatusBar } from 'react-native';
 
 export default StyleSheet.create({
     AndroidSafeArea: {
-        flex: 1,
-        backgroundColor: "transparent",
+        backgroundColor: "white",
         paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     },
     container: {

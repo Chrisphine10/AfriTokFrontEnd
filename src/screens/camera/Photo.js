@@ -11,6 +11,7 @@ import {
     Dimensions,
     SafeAreaView,
     Image,
+    Reanimated,
 
 } from 'react-native';
 import { Camera } from 'expo-camera';

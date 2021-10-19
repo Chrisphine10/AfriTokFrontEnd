@@ -5,6 +5,8 @@ import Feed from './Feed';
 import test from '../../test.json';
 import styles from '../styles/homestyles';
 import Video from '../api/test/video';
+import { useIsFocused } from '@react-navigation/native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 const PagerView = Animated.createAnimatedComponent(PageView);
 
@@ -14,7 +16,7 @@ const Home = ({ navigation }) => {
     const [data, setData] = useState(false);
     const [active, setActive] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
-
+    const [clip, setClip] = useState(0);
     const [refreshing, setRefreshing] = React.useState(false);
 
     const onRefresh = React.useCallback(() => {
@@ -23,7 +25,8 @@ const Home = ({ navigation }) => {
     }, []);
 
     useEffect(() => {
-        const fetchData = async () => {
+        let isMounted = true;
+        const fetchData = async () => {  
         try {
                 const videos = await Video();
                 setData(videos);
@@ -33,68 +36,85 @@ const Home = ({ navigation }) => {
             }
         };
         fetchData();
+        return () => { isMounted = false };
     }, []);
-    if(isLoading) {
+
+    if(isLoading){
         return <View style={{justifyContent: 'center', backgroundColor:'black', alignContent:'center', textAlign: 'center', height: '100%'}}><Text>Loading...</Text></View>;
     }
+
+    const onPageScroll = (event) => {
+        const position = event.nativeEvent.position;
+        if(position !== clip) {
+            setClip(position);
+            console.log("current clip", position);
+        }
+    }
+
     return (
-        <View style={{backgroundColor: 'black', marginTop: 20}}>
-            <View style={styles.header}>
-                <View style={styles.row}>
-                    <View 
-                    style={styles.headerText}
-                    onPress={ () => setTab(1) }
-                    >
-                        <Text 
-                        active={tab === 1}
-                        style={styles.text}
-                        >Yours</Text>
-                    </View>
-                    <Image 
-                    source ={require('../../assets/images/Afrotok-icon.png')}
-                    style={styles.logo}
-                    />
-                    <View 
-                    style={styles.headerText}
-                    onPress={ () => setTab(2) }
-                    >
-                        <Text 
-                            style={styles.text}
-                            active={tab === 1}>Trends
-                        </Text>
-                    </View>
-                </View>
-            </View>
-            <PagerView 
-            style={styles.pagerView}
-            initialPage={0}
-            refreshControl={
-                <RefreshControl
-                  refreshing={refreshing}
-                  onRefresh={onRefresh}
-                />
-            }
-            orientation= "vertical"
-            >
-            {data.map((item) => 
-                   (
-                        <View key={item.id}>
-                            <Feed 
-                                navigation={navigation}
-                                item={item.clip} 
-                                music={item.song.name}
-                                tags={item.post} 
-                                username={item.user.login} 
-                                comments={item.comments}
-                                likes={item.likes}
-                                play={(item.id) ? active : !active } 
+        <SafeAreaView style={styles.AndroidSafeArea}>      
+            <View>  
+                {!isLoading && (
+                <View>
+                    <View style={styles.header}>
+                        <View style={styles.row}>
+                            <View 
+                            style={styles.headerText}
+                            onPress={ () => setTab(1) }
+                            >
+                                <Text 
+                                active={tab === 1}
+                                style={styles.text}
+                                >Yours</Text>
+                            </View>
+                            <Image 
+                            source ={require('../../assets/images/Afrotok-icon.png')}
+                            style={styles.logo}
                             />
-                        </View>                  
-                   )
-               )
-            }
-            </PagerView>
-        </View>
+                            <View 
+                            style={styles.headerText}
+                            onPress={ () => setTab(2) }
+                            >
+                                <Text 
+                                    style={styles.text}
+                                    active={tab === 1}>Trends
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
+                    <PagerView 
+                    style={styles.pagerView}
+                    initialPage={0}
+                    orientation= "vertical"
+                    onPageScroll={onPageScroll}
+                    >
+                    {data.map((item, index) => 
+                        (
+                                <View key={index}>
+                                { (clip == index) && (
+                                    <Feed 
+                                        index={index} 
+                                        item={(clip == index) ? item.clip : null}
+                                        navigation={navigation}
+                                        music={item.song.name}
+                                        tags={item.post} 
+                                        username={item.user.login} 
+                                        comments={item.comments}
+                                        likes={item.likes}
+                                        play={(item.id) ? active : !active } 
+                                        clip={clip}
+                                        //image={item.screenshot}
+                                    />
+                                )}
+                                </View>                  
+                        )
+                    )
+                    }
+                    </PagerView>
+                </View>
+                )}
+            </View>
+        </SafeAreaView>
     )
 }
 export default Home;

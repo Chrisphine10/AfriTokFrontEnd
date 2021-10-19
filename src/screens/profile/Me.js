@@ -82,74 +82,74 @@ const Me = ({ navigation, props }) => {
     )
     
     const renderHeader = () => (
-        <View style={styles.headerWrapper}>
-            <Animated.View>
-                <View style={styles.container}>
-                    <TouchableOpacity
-                    onPress={pressFriends}
-                    >
-                        <MaterialCommunityIcons size={30} name="account-multiple-plus" color="#000" />
-                    </TouchableOpacity>
-                    <Picker
-                        selectedValue={selectedValue}
-                        style={{ height: 50, width: 150 }}
-                        onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-                    >
-                        <Picker.Item label="Account1" value="Account1" />
-                        <Picker.Item label="Account2" value="Account2" />
-                    </Picker>
-                    <TouchableOpacity 
-                    onPress={pressProfileEdit}
-                    >
-                        <MaterialCommunityIcons 
-                        size={30} 
-                        name="dots-horizontal-circle-outline" color="#000" 
-                        onPress={pressSetting}
-                        />
-                    </TouchableOpacity>
-                </View>
-            </Animated.View>
-        </View>
+        <SafeAreaView style={styles.AndroidSafeArea}>
+            <View style={styles.headerWrapper}>
+                <Animated.View>
+                    <View style={styles.container}>
+                        <TouchableOpacity
+                        onPress={pressFriends}
+                        >
+                            <MaterialCommunityIcons size={30} name="account-multiple-plus" color="#000" />
+                        </TouchableOpacity>
+                        <Picker
+                            selectedValue={selectedValue}
+                            style={{ height: 50, width: 150 }}
+                            onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                        >
+                            <Picker.Item label="Account1" value="Account1" />
+                            <Picker.Item label="Account2" value="Account2" />
+                        </Picker>
+                        <TouchableOpacity 
+                        onPress={pressProfileEdit}
+                        >
+                            <MaterialCommunityIcons 
+                            size={30} 
+                            name="dots-horizontal-circle-outline" color="#000" 
+                            onPress={pressSetting}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                </Animated.View>
+            </View>
+        </SafeAreaView>
     )
     
     return (
-        <SafeAreaView style={styles.AndroidSafeArea}>
-                <StickyParallaxHeader
-                    headerType="TabbedHeader"
-                    foreground={renderForeground}
-                    header={renderHeader}
-                    transparentHeader={false}
-                    parallaxHeight={350}
-                    headerHeight={50}
-                    snapValue={0}
-                    snapToEdge={false}
-                    hasBorderRadius={false}
-                    backgroundColor="white"
-                    //headerSize={() => {}}
-                    //onEndReached={() => {}}
-                    scrollEvent={event(
-                        [{ nativeEvent: { contentOffset: { y: scrollY.y } } }],
-                        { useNativeDriver: false }
-                    )}
-                    tabs={[
-                    {
-                        title: "Yours",
-                        icon: <MaterialCommunityIcons size={30} name="view-grid" color="#000" />,
-                        content: <MyImages />
-                    },
-                    {
-                        title: "Liked",
-                        icon: <MaterialCommunityIcons size={30} name="heart-multiple" color="#000" />,
-                        content: <MyVideos />
-                    }
-                    ]}
-                    tabTextStyle={styles.tabText}
-                    tabTextContainerStyle={styles.tabTextContainerStyle}
-                    tabTextContainerActiveStyle={styles.tabTextContainerActiveStyle}
-                    tabsWrapperStyle={styles.tabsWrapper}
-                    >
-                </StickyParallaxHeader>
-        </SafeAreaView>
+        <StickyParallaxHeader
+            headerType="TabbedHeader"
+            foreground={renderForeground}
+            header={renderHeader}
+            transparentHeader={false}
+            parallaxHeight={350}
+            headerHeight={70}
+            snapValue={0}
+            snapToEdge={false}
+            hasBorderRadius={false}
+            backgroundColor="white"
+            //headerSize={() => {}}
+            //onEndReached={() => {}}
+            scrollEvent={event(
+                [{ nativeEvent: { contentOffset: { y: scrollY.y } } }],
+                { useNativeDriver: false }
+            )}
+            tabs={[
+            {
+                title: "Yours",
+                icon: <MaterialCommunityIcons size={30} name="view-grid" color="#000" />,
+                content: <MyImages />
+            },
+            {
+                title: "Liked",
+                icon: <MaterialCommunityIcons size={30} name="heart-multiple" color="#000" />,
+                content: <MyVideos />
+            }
+            ]}
+            tabTextStyle={styles.tabText}
+            tabTextContainerStyle={styles.tabTextContainerStyle}
+            tabTextContainerActiveStyle={styles.tabTextContainerActiveStyle}
+            tabsWrapperStyle={styles.tabsWrapper}
+            >
+        </StickyParallaxHeader>
     )
 }
 

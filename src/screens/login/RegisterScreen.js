@@ -11,6 +11,9 @@ import { theme } from '../../core/theme';
 import { emailValidator } from '../../helpers/emailValidator';
 import { passwordValidator } from '../../helpers/passwordValidator';
 import { nameValidator } from '../../helpers/nameValidator';
+import styles from '../../styles/starterstyles'
+
+
 export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState({ value: '', error: '' })
   const [email, setEmail] = useState({ value: '', error: '' })
@@ -69,7 +72,7 @@ export default function RegisterScreen({ navigation }) {
       <Button
         mode="contained"
         onPress={onSignUpPressed}
-        style={{ marginTop: 24 }}
+        style={styles.button}
       >
         Sign Up
       </Button>
@@ -82,14 +85,3 @@ export default function RegisterScreen({ navigation }) {
     </Background>
   )
 }
-
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    marginTop: 4,
-  },
-  link: {
-    fontWeight: 'bold',
-    color: theme.colors.primary,
-  },
-})

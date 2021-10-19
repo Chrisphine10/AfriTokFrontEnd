@@ -88,5 +88,11 @@ export default StyleSheet.create({
     },
     comment:{
 
-    }
+    },
+    image: {
+        flex: 1,
+        resizeMode: 'cover',
+        justifyContent: 'center',
+        zIndex: -1,
+    },
 });

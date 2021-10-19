@@ -37,7 +37,7 @@ const Tabs = () => {
         shifting={true} 
         barStyle={{
             backgroundColor: home ? '#000' : '#fff',
-            display: tabVisibility
+            display: tabVisibility,
         }}
         initialRouteName="Home"
         activeColor={home ? '#fff' : '#000'}

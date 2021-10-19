@@ -1,11 +1,11 @@
-import React from 'react';
-import { Animated, SafeAreaView, Image, View, Text, TouchableOpacity} from 'react-native';
+import React, {useEffect} from 'react';
+import { Animated, BackHandler, SafeAreaView, Image, View, Text, TouchableOpacity} from 'react-native';
 import styles from '../../styles/albumstyles';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import MyImages from '../../components/myimages';
 import StickyParallaxHeader from 'react-native-sticky-parallax-header';
 
-const Album = () => {
+const Album = ({navigation}) => {
     const { event, ValueXY } = Animated
     const scrollY = new ValueXY()
 
@@ -31,11 +31,26 @@ const Album = () => {
     </View>
     )
 
+    //custom back for android
+    useEffect(() => {
+        function handleBackButton() {
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'Routes' }],
+            })
+          return true;
+        }
+    
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+    
+        return () => backHandler.remove();
+    }, [navigation]);
+
     const renderHeader = () => (
-       <View></View>
+        <SafeAreaView style={styles.AndroidSafeArea}></SafeAreaView>
     )
     return (
-        <SafeAreaView style={styles.AndroidSafeArea}>
+        <View style={{flex: 1,}}>
             <View style={styles.sauti}>
                 <MaterialCommunityIcons style={styles.sautiIcon} size={35} name="video-outline" color="#000" />
                 <Text style={styles.sautiText}>Use Sauti</Text>
@@ -71,7 +86,7 @@ const Album = () => {
                 tabsWrapperStyle={styles.tabsWrapper}
                 >
             </StickyParallaxHeader>
-       </SafeAreaView>
+       </View>
     )
 }
 

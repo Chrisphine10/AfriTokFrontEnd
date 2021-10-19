@@ -2,9 +2,9 @@ import { StyleSheet, Dimensions, Platform, StatusBar } from 'react-native';
 
 export default StyleSheet.create({
     AndroidSafeArea: {
+        backgroundColor: "black",
+        //paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,   
         flex: 1,
-        //backgroundColor: "transparent",
-        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
     },
     container: {
         flex: 1,
@@ -19,8 +19,8 @@ export default StyleSheet.create({
     camera: {
         flex: 1,
         flexDirection: 'row',
-        height: Math.round((Dimensions.get('window').width * 16) / 9),
-        width: Dimensions.get('window').width,
+        backgroundColor: 'black',
+        justifyContent: 'flex-start',
     },
     header: {
         flexDirection: 'row',

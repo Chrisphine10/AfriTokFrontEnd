@@ -1,12 +1,13 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { Text, View, StyleSheet, SafeAreaView, Alert } from 'react-native';
+import { Text, View, StyleSheet, Alert } from 'react-native';
 import { AssetsSelector } from 'expo-images-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { MediaType } from 'expo-media-library';
 import styles from '../../styles/gallerystyles';
 import { theme } from '../../core/theme';
+import { useIsFocused } from '@react-navigation/native';
 
 const ForceInset = {
   top: 'never',
@@ -73,7 +74,8 @@ export default function Gallery({navigation}) {
 
   const _buttonStyle = {
     backgroundColor: theme.colors.primary,
-    borderRadius: 5,
+    borderRadius: 2,
+    fontFamily: 'AbelRegular',
   };
 
   const widgetNavigator = useMemo(
@@ -116,19 +118,23 @@ export default function Gallery({navigation}) {
     []
   );
 
+  const isFocused = useIsFocused();
+
   return (
     <SafeAreaProvider>
-      <SafeAreaView forceInset={ForceInset} style={styles.AndroidSafeArea}>
-        <View style={styles.container}>
-          <AssetsSelector
-            Settings={widgetSettings}
-            Errors={widgetErrors}
-            Styles={widgetStyles}
-            Navigator={widgetNavigator}
-            // Resize={widgetResize} know how to use first , perform slower results.
-          />
-        </View>
-      </SafeAreaView>
+      { isFocused && (
+        <SafeAreaView forceInset={ForceInset} style={styles.AndroidSafeArea}>
+          <View style={styles.container}>
+            <AssetsSelector
+              Settings={widgetSettings}
+              Errors={widgetErrors}
+              Styles={widgetStyles}
+              Navigator={widgetNavigator}
+              // Resize={widgetResize} know how to use first , perform slower results.
+            />
+          </View>
+        </SafeAreaView>
+      )}
     </SafeAreaProvider>
   );
 }

@@ -1,5 +1,15 @@
-import React, { useState, useRef } from 'react';
-import { View, ScrollView, Share, Text, Animated, Easing, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { 
+    View, 
+    Image, 
+    ScrollView, 
+    Share, 
+    Text, 
+    Animated, 
+    Easing, 
+    TouchableWithoutFeedback, 
+    TouchableOpacity,
+ } from 'react-native';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Video } from 'expo-av';
 import styles from '../styles/feedstyles';
@@ -7,17 +17,17 @@ import { Avatar } from 'react-native-paper';
 import Comments from '../components/post_comment';
 import SlideAnimated from 'react-native-reanimated';
 import BottomSheet from 'reanimated-bottom-sheet';
+//import * as VideoThumbnails from 'expo-video-thumbnails';
 
-const options = {
-    title: 'Share via',
-    message: 'some message',
-};
-const shareit = async () => {
-    const shareResponse = await Share.share(options);
-};
-var abbreviate = require('number-abbreviate')
 const Feed = (props) => {
-   
+    const options = {
+        title: 'Share via',
+        message: 'some message',
+    };
+    const shareit = async () => {
+        const shareResponse = await Share.share(options);
+    };
+    var abbreviate = require('number-abbreviate');
     const pressAlbum = () => {
         props.navigation.navigate("Album");
     };
@@ -26,10 +36,12 @@ const Feed = (props) => {
     };
     const sheetRef = useRef(null);
     const [pause, setPause] = useState(props.play);
+    const [image, setImage] = useState(null);
     const onPlayPausePress = () => { 
         setPause(!pause);
         sheetRef.current.snapTo(1);
     };
+
     const commentHeight = (80 * 13);
     const spinValue = new Animated.Value(0);
     const renderContent = () => (
@@ -96,22 +108,61 @@ const Feed = (props) => {
         outputRange: ['0deg', '360deg'],
         
     });
+
+    const videoRef = useRef();
+   
+  
+  // play and pause video
+    const onPlayPause = () => {
+        if (videoRef.current.status.isLoaded) {
+            if (videoRef.current.status.isPlaying) {
+                setPause(true);
+            } else {
+                setPause(false);
+            }
+        }
+    };
+    // useEffect(() => {
+    //     let isMounted = true;
+    //     const generateThumbnail = async () => {
+    //         try {
+    //           const { uri } = await VideoThumbnails.getThumbnailAsync( props.image,
+    //             {
+    //               time: 15000,
+    //             }
+    //           );
+    //           setImage(uri);
+    //         } catch (e) {
+    //           console.warn(e);
+    //         }
+    //       };
+    //     generateThumbnail();
+    //     return () => { isMounted = false };
+    // }, []);
+    
     return (
         <View style={styles.feed}>
+        <View>
             <TouchableWithoutFeedback
                 onPress = {
                     onPlayPausePress
                 }
             > 
                 <Video
-                    source={{ uri: require('../../assets/big_buck_bunny.mp4') }}
+                    //source={{ uri: require('../../assets/big_buck_bunny.mp4') }}
+                    source={{uri: props.item }}
                     rate={1.0}
                     volume={1.0}
                     isMuted={false}
-                    resizeMode="cover"
-                    shouldPlay={pause}
+                    onLoadStart={() => {
+                        console.log('load start', props.index);
+                    }}
+                    ref={videoRef}
+                    resizeMode={Video.RESIZE_MODE_COVER}
+                    shouldPlay={(props.index === props.clip) && pause} 
                     isLooping
                     //usePoster={true}
+                    //posterSource={{uri: props.image}}
                     progressUpdateIntervalMillis={50}
                     style={{
                         width: '100%',
@@ -120,7 +171,7 @@ const Feed = (props) => {
                         borderRadius: 12,
                     }}
                 />
-            </TouchableWithoutFeedback>
+            </TouchableWithoutFeedback> 
             <View style={styles.rightContent}>
                 <TouchableOpacity style={styles.icons}>
                     <MaterialCommunityIcons 
@@ -238,6 +289,7 @@ const Feed = (props) => {
                 borderRadius={10}
                 renderContent={renderContent}
             />
+        </View>
         </View>
     )
 }

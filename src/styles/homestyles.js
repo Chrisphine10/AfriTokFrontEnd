@@ -1,6 +1,11 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions, Platform, StatusBar  } from 'react-native';
 
 export default StyleSheet.create({
+    AndroidSafeArea: {
+        flex: 1,
+        backgroundColor: "black",
+       // paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    },
     logo: {
         width: 80,
         height: 50,
