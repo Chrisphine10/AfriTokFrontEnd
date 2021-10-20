@@ -18,6 +18,7 @@ const MySauti = ({navigation, gotoRecord }) => {
     const [isPress, setIsPress ] = useState(false);
 
     useEffect(() => {
+        MediaLibrary.requestPermissionsAsync();
         MediaLibrary.getPermissionsAsync();
         const pickDocument = async () => {
             try {
@@ -36,6 +37,7 @@ const MySauti = ({navigation, gotoRecord }) => {
             console.log('I am in cleanup function');
         };
     }, []);
+
     useEffect(() => {
         (async () => {
             console.log('status', playing)

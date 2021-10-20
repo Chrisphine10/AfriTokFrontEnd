@@ -21,6 +21,7 @@
         "add": "^2.0.6",
         "aws-amplify": "^4.3.0",
         "aws-amplify-react-native": "^5.0.3",
+        "axios": "^0.23.0",
         "create-react-native-app": "^3.6.0",
         "expo": "~42.0.1",
         "expo-app-loading": "^1.1.2",
@@ -68,6 +69,9 @@
         "react-navigation": "^4.4.4",
         "react-redux": "^7.2.5",
         "reanimated-bottom-sheet": "^1.0.0-alpha.22",
+        "redux": "^4.1.1",
+        "redux-thunk": "^2.3.0",
+        "remote-redux-devtools": "^0.5.16",
         "webgltexture-loader-expo-camera": "^1.0.0",
         "yarn": "^1.22.15"
     },

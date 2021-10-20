@@ -7,7 +7,6 @@ import styles from '../../styles/editvideostyles';
 import { theme } from '../../core/theme';
 import { Video } from 'expo-av';
 
-
 export default function EditVideo({navigation, route}) {
 
   function goBack () {

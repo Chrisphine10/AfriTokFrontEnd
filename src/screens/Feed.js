@@ -154,6 +154,7 @@ const Feed = (props) => {
                     rate={1.0}
                     volume={1.0}
                     isMuted={false}
+                    lazy
                     onLoadStart={() => {
                         console.log('load start', props.index);
                     }}
@@ -161,6 +162,7 @@ const Feed = (props) => {
                     resizeMode={Video.RESIZE_MODE_COVER}
                     shouldPlay={(props.index === props.clip) && pause} 
                     isLooping
+                    //shouldCorrectPitch={true}
                     //usePoster={true}
                     //posterSource={{uri: props.image}}
                     progressUpdateIntervalMillis={50}

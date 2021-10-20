@@ -4,16 +4,17 @@ import PageView from 'react-native-pager-view';
 import Feed from './Feed';
 import test from '../../test.json';
 import styles from '../styles/homestyles';
-import Video from '../api/test/video';
+import Videos from '../api/containers/Videos';
 import { useIsFocused } from '@react-navigation/native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { useDispatch, useSelector } from "react-redux";
+import { setVideos } from '../api/actions/videoActions';
 
 const PagerView = Animated.createAnimatedComponent(PageView);
 
 const Home = ({ navigation }) => {
    
     const [tab, setTab] = useState(1);
-    const [data, setData] = useState(false);
     const [active, setActive] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
     const [clip, setClip] = useState(0);
@@ -24,20 +25,25 @@ const Home = ({ navigation }) => {
         wait(2000).then(() => setRefreshing(false));
     }, []);
 
+    const dispatch = useDispatch();
+    const videos = useSelector(state => state.allVideos.videos);
+    const fetchData = async () => {  
+        try {
+            const videos = await Videos();
+            dispatch(setVideos(videos));
+            setIsLoading(false);
+
+        } catch (error) {
+            console.error(error);
+        };
+    };
     useEffect(() => {
         let isMounted = true;
-        const fetchData = async () => {  
-        try {
-                const videos = await Video();
-                setData(videos);
-                setIsLoading(false);
-            } catch (error) {
-                console.error(error);
-            }
-        };
         fetchData();
         return () => { isMounted = false };
     }, []);
+    
+    //console.log("Videos: ", videos);
 
     if(isLoading){
         return <View style={{justifyContent: 'center', backgroundColor:'black', alignContent:'center', textAlign: 'center', height: '100%'}}><Text>Loading...</Text></View>;
@@ -88,7 +94,7 @@ const Home = ({ navigation }) => {
                     orientation= "vertical"
                     onPageScroll={onPageScroll}
                     >
-                    {data.map((item, index) => 
+                    {videos.map((item, index) => 
                         (
                                 <View key={index}>
                                 { (clip == index) && (
