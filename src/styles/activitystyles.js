@@ -2,7 +2,7 @@ import { StyleSheet, Dimensions, Platform, StatusBar } from 'react-native';
 
 export default StyleSheet.create({
     AndroidSafeArea: {
-        //backgroundColor: "transparent",
+        backgroundColor: "white",
         paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
     },
     activity: {
@@ -14,8 +14,8 @@ export default StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
-        marginRight: 30,
-        marginLeft: 5,
+        paddingRight: 30,
+        paddingLeft: 5,
      },
     time: {
         fontSize: 16,

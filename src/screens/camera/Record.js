@@ -307,7 +307,11 @@ const Record = ({ navigation, route }) => {
                 </Camera>
             )}
             <View style={styles.floatingControl}>
-                <TouchableOpacity onPress={gotoSauti} ><MaterialCommunityIcons size={30} name="music" color="red" /></TouchableOpacity>
+                <TouchableOpacity onPress={gotoSauti} style={{
+                    backgroundColor: '#fff',
+                    borderRadius: 50,
+                    padding: 3,
+                }} ><MaterialCommunityIcons size={30} name="music" color="red" /></TouchableOpacity>
                 <TouchableOpacity
                     onPressIn ={ () => 
                         {
@@ -328,7 +332,13 @@ const Record = ({ navigation, route }) => {
                 >
                     <MaterialCommunityIcons size={80} name="record-circle" color="red" />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={gotoGallery} ><MaterialCommunityIcons size={30} name="view-grid" color="red" />
+                <TouchableOpacity 
+                style={{
+                    backgroundColor: '#fff',
+                    borderRadius: 50,
+                    padding: 3,
+                }} 
+                onPress={gotoGallery} ><MaterialCommunityIcons size={30} name="view-grid" color="red" />
                 </TouchableOpacity>
             </View>
        </SafeAreaView>

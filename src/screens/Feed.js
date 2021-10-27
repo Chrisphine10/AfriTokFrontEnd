@@ -18,6 +18,10 @@ import Comments from '../components/post_comment';
 import SlideAnimated from 'react-native-reanimated';
 import BottomSheet from 'reanimated-bottom-sheet';
 //import * as VideoThumbnails from 'expo-video-thumbnails';
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserVideoLikes, likeVideo } from '../api/actions/videoLikeActions';
+import { deleteLikeVideo} from '../api/actions/videoLikeActions';
+import { fetchVideoLikes } from '../api/actions/videoLikeActions';
 
 const Feed = (props) => {
     const options = {
@@ -41,6 +45,7 @@ const Feed = (props) => {
         setPause(!pause);
         sheetRef.current.snapTo(1);
     };
+    const [like, setLike] = useState(false);
 
     const commentHeight = (80 * 13);
     const spinValue = new Animated.Value(0);
@@ -139,6 +144,39 @@ const Feed = (props) => {
     //     generateThumbnail();
     //     return () => { isMounted = false };
     // }, []);
+    const dispatch = useDispatch(); 
+    const videoLikes = useSelector(state => state.allVideoLikes.likes);
+    useEffect(() => {
+        let isMounted = true;
+        const fetchData = () => {
+            try { 
+                if(videoLikes[0] && videoLikes[0] !== []){    
+                    setLike(true);
+                }
+                else{
+                    setLike(false);
+                }
+            } catch (error) {
+                console.error(error);
+            } 
+        };
+        fetchData();
+        return () => isMounted = false;
+    }, [videoLikes]);
+    
+    useEffect(() => {
+        let isMounted = true; 
+        const fetchLikeData = () => {
+            try {
+                dispatch(fetchUserVideoLikes("admin", props.id));
+            } catch (e) {
+                console.warn(e);
+            }
+        };
+        fetchLikeData();
+        return () => isMounted = false;
+    }, [props.id]);
+
     
     return (
         <View style={styles.feed}>
@@ -154,9 +192,9 @@ const Feed = (props) => {
                     rate={1.0}
                     volume={1.0}
                     isMuted={false}
-                    lazy
+                    //lazy
                     onLoadStart={() => {
-                        console.log('load start', props.index);
+                        console.log('load start');
                     }}
                     ref={videoRef}
                     resizeMode={Video.RESIZE_MODE_COVER}
@@ -175,19 +213,49 @@ const Feed = (props) => {
                 />
             </TouchableWithoutFeedback> 
             <View style={styles.rightContent}>
-                <TouchableOpacity style={styles.icons}>
-                    <MaterialCommunityIcons 
-                                name="heart" 
-                                size={38} 
-                                color="red"
-                                style={{
-                                    textShadowColor: 'rgba(0, 0, 0, 0.80)',
-                                    textShadowOffset: {width: -0.5, height: 0.5},
-                                    textShadowRadius: 1,
-                                }}
-                                />
-                    <Text style={styles.text}>{abbreviate(props.likes)}</Text>
-                </TouchableOpacity>
+                { like && (
+                    <TouchableOpacity style={styles.icons}>
+                        <MaterialCommunityIcons 
+                                    name="heart" 
+                                    size={38} 
+                                    color="red"
+                                    style={{
+                                        textShadowColor: 'rgba(0, 0, 0, 0.80)',
+                                        textShadowOffset: {width: -0.5, height: 0.5},
+                                        textShadowRadius: 1,
+                                    }}
+                                    onPress={() => {
+                                        dispatch(deleteLikeVideo(videoLikes[0].id));
+                                    }}
+                                    />
+                        <Text style={styles.text}>{abbreviate(props.likes)}</Text>
+                    </TouchableOpacity>
+                )}
+                { !like && (
+                    <TouchableOpacity style={styles.icons}>
+                        <MaterialCommunityIcons 
+                                    name="heart" 
+                                    size={38} 
+                                    color="white"
+                                    style={{
+                                        textShadowColor: 'rgba(0, 0, 0, 0.80)',
+                                        textShadowOffset: {width: -0.5, height: 0.5},
+                                        textShadowRadius: 1,
+                                    }}
+                                    onPress={() => {
+                                        var today = new Date();
+                                        const date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
+                                        //const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+                                       // const dateTime = date+' '+time;
+                                        console.log(date);
+                                        console.log(today);
+                                        console.log(props.clip)
+                                        dispatch(likeVideo("admin", props.clip, date));
+                                    }}
+                                    />
+                        <Text style={styles.text}>{abbreviate(props.likes)}</Text>
+                    </TouchableOpacity>
+                )}
                 <TouchableOpacity style={styles.icons}>
                     <MaterialCommunityIcons 
                                 name="comment-processing" 

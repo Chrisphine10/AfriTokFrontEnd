@@ -4,11 +4,11 @@ import PageView from 'react-native-pager-view';
 import Feed from './Feed';
 import test from '../../test.json';
 import styles from '../styles/homestyles';
-import Videos from '../api/containers/Videos';
+//import {Videos} from '../api/containers/Videos';
 import { useIsFocused } from '@react-navigation/native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from "react-redux";
-import { setVideos } from '../api/actions/videoActions';
+import { fetchVideos } from '../api/actions/videoActions';
 
 const PagerView = Animated.createAnimatedComponent(PageView);
 
@@ -16,6 +16,7 @@ const Home = ({ navigation }) => {
    
     const [tab, setTab] = useState(1);
     const [active, setActive] = useState(true);
+    const [data, setData] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [clip, setClip] = useState(0);
     const [refreshing, setRefreshing] = React.useState(false);
@@ -26,21 +27,42 @@ const Home = ({ navigation }) => {
     }, []);
 
     const dispatch = useDispatch();
-    const videos = useSelector(state => state.allVideos.videos);
-    const fetchData = async () => {  
-        try {
-            const videos = await Videos();
-            dispatch(setVideos(videos));
-            setIsLoading(false);
+    // const fetchData = async () => {  
+    //     try {
+    //         const videos = await Videos();
+    //         dispatch(fetchVideos(videos));
+    //         setIsLoading(false);
 
+    //     } catch (error) {
+    //         console.error(error);
+    //     };
+    // };
+    const videos = useSelector(state => state.allVideos.videos);
+
+    useEffect(() => {
+        let isMounted = true;
+        const fetchData = async () => {
+            try {      
+                await setData(videos);
+                if(data && data !== []) {     
+                    setIsLoading(false);
+                }
+            } catch (error) {
+                console.error(error);
+            } 
+        };
+        fetchData();
+        return () => isMounted = false;
+    }, [videos]);
+    useEffect(() => {
+        let isMounted = true; 
+        try {
+        dispatch(fetchVideos());
         } catch (error) {
             console.error(error);
         };
-    };
-    useEffect(() => {
-        let isMounted = true;
-        fetchData();
-        return () => { isMounted = false };
+
+        return () => isMounted = false;
     }, []);
     
     //console.log("Videos: ", videos);
@@ -53,7 +75,6 @@ const Home = ({ navigation }) => {
         const position = event.nativeEvent.position;
         if(position !== clip) {
             setClip(position);
-            console.log("current clip", position);
         }
     }
 
@@ -94,12 +115,13 @@ const Home = ({ navigation }) => {
                     orientation= "vertical"
                     onPageScroll={onPageScroll}
                     >
-                    {videos.map((item, index) => 
+                    {data.map((item, index) => 
                         (
                                 <View key={index}>
                                 { (clip == index) && (
                                     <Feed 
                                         index={index} 
+                                        id={item.id}
                                         item={(clip == index) ? item.clip : null}
                                         navigation={navigation}
                                         music={item.song.name}
@@ -108,7 +130,7 @@ const Home = ({ navigation }) => {
                                         comments={item.comments}
                                         likes={item.likes}
                                         play={(item.id) ? active : !active } 
-                                        clip={clip}
+                                        clip={item.clip}
                                         //image={item.screenshot}
                                     />
                                 )}

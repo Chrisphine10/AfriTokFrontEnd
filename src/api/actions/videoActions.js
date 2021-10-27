@@ -1,37 +1,92 @@
+import baseAPI from '../baseAPI';
 import { ActionTypes } from "./types";
 
-export const addVideo = (video) => ({
-    type: ActionTypes.ADD_VIDEO,
-    payload: video
-});
+export const addVideo = (
+    clip, 
+    screenshot, 
+    language, 
+    post, 
+    privateVideo, 
+    duet, 
+    approved, 
+    duration,
+    likes,
+    comments,
+    section,
+    song,
+    user,
+    tag
+    ) => {
+    return async function (dispatch, getState) {
+        const response = await baseAPI.post("videos", {
+            body: {
+                clip: clip,
+                screenshot: screenshot, 
+                language: language,
+                post: post, 
+                privateVideo: privateVideo, 
+                duet: duet,
+                approved: approved, 
+                duration: duration,
+                likes: likes,
+                comments: comments,
+                section: section,
+                song: song,
+                user: user,
+                tags: tag,
+            }
+        });
+        dispatch({type: ActionTypes.ADD_VIDEO, payload: response.data});
+    };
+};
 
-export const setVideo = (video) => ({
-    type: ActionTypes.FETCH_VIDEO,
-    payload: video
-});
+export const fetchVideos = () => {
+    return async function (dispatch, getState) {
+        const response = await baseAPI.get("videos");
+        dispatch({type: ActionTypes.FETCH_VIDEOS, payload: response.data});
+    };
+};
 
-export const setVideos = (videos) => ({
-    type: ActionTypes.FETCH_VIDEOS,
-    payload: videos
-});
-
-export const setVideosBySong = (videos) => ({
-    type: ActionTypes.FETCH_VIDEOS_BY_SONG,
-    payload: videos
-});
+export const fetchVideosBySong = (song) => {
+    return async function (dispatch, getState) {
+        const response = await baseAPI.get("songs/"+ song.id + "/videos");
+        dispatch({type: ActionTypes.FETCH_VIDEOS_BY_SONG, payload: response.data});
+    };
+};
 
 
-export const setVideosByUser = (videos) => ({
-    type: ActionTypes.FETCH_VIDEOS_BY_USER,
-    payload: videos
-});
+export const fetchVideosByUser = (login) => {
+    return async function (dispatch, getState) {
+        const response = await baseAPI.get(login + "/videos");
+        dispatch({type: ActionTypes.FETCH_VIDEOS_BY_USER, payload: response.data});
+    };
+};
 
-export const updateVideo = (video) => ({
-    type: ActionTypes.UPDATE_VIDEO,
-    payload: video
-});
+export const updateVideoLikes = (video, totalLikes) => {
+    return async function (dispatch, getState) {
+        const response = await baseAPI.patch("videos/" + video.id, {
+            body: {
+                likes: totalLikes,
+                }
+            });
+        dispatch({type: ActionTypes.UPDATE_VIDEO_LIKES, payload: response.data});
+    };
+};
 
-export const deleteVideo = (video) => ({
-    type: ActionTypes.DELETE_VIDEO,
-    payload: video
-});
+export const updateVideoComments = (video, totalComments) => {
+    return async function (dispatch, getState) {
+        const response = await baseAPI.patch("videos/" + video.id, {
+            body: {
+                comments: totalComments,
+                }
+            });
+        dispatch({type: ActionTypes.UPDATE_VIDEO_COMMENTS, payload: response.data});
+    };
+};
+
+export const deleteVideo= (video) => {
+    return async function (dispatch, getState) {
+        const response = await baseAPI.get("videos/" + video.id);
+        dispatch({type: ActionTypes.DELETE_VIDEO, payload: response.data});
+    };
+};

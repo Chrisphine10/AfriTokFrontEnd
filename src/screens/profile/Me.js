@@ -39,7 +39,7 @@ const Me = ({ navigation, props }) => {
                 <View style={styles.avatar}>
                     <Avatar.Image
                     size={100}
-                    source={ require('../../../assets/images/test1.jpg')}
+                    source={ require('../../../assets/images/avatar_default.png')}
                     />
                     <Text style={styles.name}>Chrisphine Otieno</Text>
                     <Text style={styles.username}>@Pheene10</Text>
