@@ -44,6 +44,7 @@ export default StyleSheet.create({
         fontSize: 14,
         color: '#000',
         fontFamily: 'AbelRegular',
+        marginHorizontal: 10,
      },
      bookmark: {
         borderWidth: 1,

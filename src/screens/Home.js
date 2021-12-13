@@ -9,7 +9,9 @@ import { useIsFocused } from '@react-navigation/native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from "react-redux";
 import { fetchVideos } from '../api/actions/videoActions';
-
+import { removeCurrentLike } from '../api/actions/videoLikeActions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { fetchUserDetails } from '../api/actions/userDetailsActions';
 const PagerView = Animated.createAnimatedComponent(PageView);
 
 const Home = ({ navigation }) => {
@@ -20,31 +22,32 @@ const Home = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [clip, setClip] = useState(0);
     const [refreshing, setRefreshing] = React.useState(false);
-
+    const [loggedUser, setLoggedUser] = useState(false);
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
         wait(2000).then(() => setRefreshing(false));
     }, []);
 
     const dispatch = useDispatch();
-    // const fetchData = async () => {  
-    //     try {
-    //         const videos = await Videos();
-    //         dispatch(fetchVideos(videos));
-    //         setIsLoading(false);
+// const fetchData = async () => {  
+//     try {
+//         const videos = await Videos();
+//         dispatch(fetchVideos(videos));
+//         setIsLoading(false);
 
-    //     } catch (error) {
-    //         console.error(error);
-    //     };
-    // };
+//     } catch (error) {
+//         console.error(error);
+//     };
+// };
     const videos = useSelector(state => state.allVideos.videos);
-
+    const userDetails = useSelector(state => state.userDetails.details);
     useEffect(() => {
         let isMounted = true;
         const fetchData = async () => {
             try {      
                 await setData(videos);
-                if(data && data !== []) {     
+                await setLoggedUser(userDetails[0]);
+                if(data && data !== [] && loggedUser) {     
                     setIsLoading(false);
                 }
             } catch (error) {
@@ -53,7 +56,24 @@ const Home = ({ navigation }) => {
         };
         fetchData();
         return () => isMounted = false;
-    }, [videos]);
+    }, [videos, userDetails]);
+
+    useEffect(() => {
+        let isMounted = true; 
+        const fetchLikeData = async () => {
+            try { 
+                const login = await AsyncStorage.getItem('userName');
+                dispatch(await fetchUserDetails(login));
+            } catch (e) {
+                console.warn(e);
+            }
+        };
+        fetchLikeData();
+        return () => {
+            isMounted = false;
+        }
+    }, []);
+
     useEffect(() => {
         let isMounted = true; 
         try {
@@ -63,7 +83,7 @@ const Home = ({ navigation }) => {
         };
 
         return () => isMounted = false;
-    }, []);
+    }, [userDetails]);
     
     //console.log("Videos: ", videos);
 
@@ -73,6 +93,7 @@ const Home = ({ navigation }) => {
 
     const onPageScroll = (event) => {
         const position = event.nativeEvent.position;
+        dispatch(removeCurrentLike());
         if(position !== clip) {
             setClip(position);
         }
@@ -127,10 +148,12 @@ const Home = ({ navigation }) => {
                                         music={item.song.name}
                                         tags={item.post} 
                                         username={item.user.login} 
+                                        userId={item.user.id}
+                                        currentUser={loggedUser.user}
                                         comments={item.comments}
                                         likes={item.likes}
                                         play={(item.id) ? active : !active } 
-                                        clip={item.clip}
+                                        clip={item}
                                         //image={item.screenshot}
                                     />
                                 )}

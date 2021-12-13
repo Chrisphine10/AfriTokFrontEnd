@@ -17,11 +17,23 @@ import { Avatar } from 'react-native-paper';
 import Comments from '../components/post_comment';
 import SlideAnimated from 'react-native-reanimated';
 import BottomSheet from 'reanimated-bottom-sheet';
+import LottieView from 'lottie-react-native';
 //import * as VideoThumbnails from 'expo-video-thumbnails';
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserVideoLikes, likeVideo } from '../api/actions/videoLikeActions';
-import { deleteLikeVideo} from '../api/actions/videoLikeActions';
-import { fetchVideoLikes } from '../api/actions/videoLikeActions';
+import { 
+    fetchUserVideoLikes, 
+    likeVideo, 
+    removeCurrentLike,
+    deleteLikeVideo,
+    fetchVideoLikes
+ } from '../api/actions/videoLikeActions';
+import { 
+    fetchFollowUser,
+    addFollowUser,
+    deleteFollowUser,
+    removeCurrentFollowUser
+} from '../api/actions/followActions';
+import baseAPI from '../api/baseAPI';
 
 const Feed = (props) => {
     const options = {
@@ -36,17 +48,26 @@ const Feed = (props) => {
         props.navigation.navigate("Album");
     };
     const pressUser = () => {
-        props.navigation.navigate("User Profile");
+        props.navigation.navigate("User Profile", {
+            username: props.username,
+        });
     };
     const sheetRef = useRef(null);
-    const [pause, setPause] = useState(props.play);
+    const [pause, setPause] = useState();
     const [image, setImage] = useState(null);
     const onPlayPausePress = () => { 
         setPause(!pause);
         sheetRef.current.snapTo(1);
     };
     const [like, setLike] = useState(false);
-
+    const [loadLike, setLoadLike] = useState(false);
+    const [currentLike, setCurrentLike] = useState(true);
+    const [currentFollow, setCurrentFollow] = useState(true);
+    const [follow, setFollow] = useState(false);
+    const [loadFollow, setLoadFollow] = useState(false);
+    const isFirstRunFollow = useRef(true);
+    const isFirstRunLike = useRef(true);
+    //const [isLoading, setIsLoading] = useState(true);
     const commentHeight = (80 * 13);
     const spinValue = new Animated.Value(0);
     const renderContent = () => (
@@ -82,18 +103,6 @@ const Feed = (props) => {
             scrollEventThrottle={1}
             showsVerticalScrollIndicator={false}
             >
-                <Comments />
-                <Comments />
-                <Comments />
-                <Comments />
-                <Comments />
-                <Comments />
-                <Comments />
-                <Comments />
-                <Comments />
-                <Comments />
-                <Comments />
-                <Comments />
                 <Comments />
             </ScrollView>
             
@@ -144,38 +153,139 @@ const Feed = (props) => {
     //     generateThumbnail();
     //     return () => { isMounted = false };
     // }, []);
+    var videoLikes = [];
+    var videoFollows = [];
     const dispatch = useDispatch(); 
-    const videoLikes = useSelector(state => state.allVideoLikes.likes);
+    videoLikes = useSelector(state => state.allVideoLikes.likes);
+    videoFollows = useSelector(state => state.allFollows.follow);
+    //console.log(videoFollows);
+
     useEffect(() => {
         let isMounted = true;
-        const fetchData = () => {
+        const clearData = async () => {
+            dispatch(await removeCurrentFollowUser());
+            dispatch(await removeCurrentLike());
+        }
+        clearData();
+        return () => {
+            isMounted = false;
+        }
+    }, []);
+
+    useEffect(() => {
+        let isMounted = true;
+        const fetchData = async () => {
             try { 
-                if(videoLikes[0] && videoLikes[0] !== []){    
-                    setLike(true);
+                if(await videoLikes && videoLikes[0] && videoLikes !== []){ 
+                    if(currentLike){
+                        setLike(true);  
+                    }
                 }
-                else{
-                    setLike(false);
+                else {
+                    if(currentLike){
+                        setLike(false);  
+                    }
                 }
             } catch (error) {
                 console.error(error);
             } 
         };
-        fetchData();
-        return () => isMounted = false;
+        if (isFirstRunLike.current) {
+            isFirstRunLike.current = false;
+        }
+        else {
+            fetchData();
+            setLoadLike(true);
+        }
+        return () => {
+            isMounted = false;
+        }
     }, [videoLikes]);
-    
+
+    useEffect(() => {
+        let isMounted = true;
+        const fetchFollowData = async () => {
+            try {
+                dispatch(await fetchFollowUser(props.currentUser.login, props.userId));
+            } catch (e) {
+                console.warn(e);
+            }
+        };
+        fetchFollowData();
+        return () => {
+            isMounted = false;
+        }
+    }, [follow]);
+
+    useEffect(() => {
+        let isMounted = true;
+        const fetchData = async () => {
+            try { 
+                if(await videoFollows && videoFollows[0] && videoFollows !== []){
+                    if(currentFollow){
+                        setFollow(true);
+                    }
+                } 
+                else {
+                    if(currentFollow){
+                        setFollow(false);
+                    }
+                }
+            } catch (error) {
+                console.error(error);
+            } 
+        };
+        if (isFirstRunFollow.current) {
+            isFirstRunFollow.current = false;
+        }
+        else {
+            fetchData();
+            setLoadFollow(true);
+        }
+        return () => {
+            isMounted = false; 
+        }
+    }, [videoFollows]);
+
     useEffect(() => {
         let isMounted = true; 
-        const fetchLikeData = () => {
+        const fetchLikeData = async () => {
             try {
-                dispatch(fetchUserVideoLikes("admin", props.id));
+                dispatch(await fetchUserVideoLikes(props.username, props.id));
             } catch (e) {
                 console.warn(e);
             }
         };
         fetchLikeData();
-        return () => isMounted = false;
-    }, [props.id]);
+        return () => {
+            isMounted = false;
+            //console.log("like has been cleaned up");
+        }
+    }, [like]);
+
+    const onFollowPress = async () => {
+        if(follow && videoFollows[0]){
+            await dispatch(deleteFollowUser(videoFollows[0].id));  
+        }   
+        else {
+            const today = new Date();
+            await dispatch(addFollowUser(props.currentUser, props.userId, today));
+        }
+        setFollow(!follow);
+        setLoadFollow(true);
+    }
+
+    const onLikePress = async () => {
+        if(like && videoLikes[0]){
+            await dispatch(deleteLikeVideo(videoLikes[0].id));
+        }
+        else if(!like) {
+            const today = new Date();
+            await dispatch(likeVideo(props.currentUser, props.clip, today));
+        }
+        setLike(!like);
+        setLoadLike(true);
+    }
 
     
     return (
@@ -198,7 +308,8 @@ const Feed = (props) => {
                     }}
                     ref={videoRef}
                     resizeMode={Video.RESIZE_MODE_COVER}
-                    shouldPlay={(props.index === props.clip) && pause} 
+                    //shouldPlay={(props.index === props.clip) && pause} 
+                    shouldPlay={!pause}
                     isLooping
                     //shouldCorrectPitch={true}
                     //usePoster={true}
@@ -213,25 +324,29 @@ const Feed = (props) => {
                 />
             </TouchableWithoutFeedback> 
             <View style={styles.rightContent}>
-                { like && (
+                { loadLike && like && (
                     <TouchableOpacity style={styles.icons}>
                         <MaterialCommunityIcons 
-                                    name="heart" 
-                                    size={38} 
-                                    color="red"
-                                    style={{
-                                        textShadowColor: 'rgba(0, 0, 0, 0.80)',
-                                        textShadowOffset: {width: -0.5, height: 0.5},
-                                        textShadowRadius: 1,
-                                    }}
-                                    onPress={() => {
-                                        dispatch(deleteLikeVideo(videoLikes[0].id));
-                                    }}
-                                    />
+                                name="heart" 
+                                size={38} 
+                                color="red"
+                                style={{
+                                    textShadowColor: 'rgba(0, 0, 0, 0.80)',
+                                    textShadowOffset: {width: -0.5, height: 0.5},
+                                    textShadowRadius: 1,
+                                }}
+                                onPress={() => {
+                                    setCurrentLike(false);
+                                    setLoadLike(false)
+                                    //setLike(false);
+                                    //dispatch(deleteLikeVideo(videoLikes[0]));
+                                    onLikePress();
+                                }}
+                                />
                         <Text style={styles.text}>{abbreviate(props.likes)}</Text>
                     </TouchableOpacity>
                 )}
-                { !like && (
+                { loadLike && !like && (
                     <TouchableOpacity style={styles.icons}>
                         <MaterialCommunityIcons 
                                     name="heart" 
@@ -243,14 +358,15 @@ const Feed = (props) => {
                                         textShadowRadius: 1,
                                     }}
                                     onPress={() => {
-                                        var today = new Date();
-                                        const date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
+                                        setCurrentLike(false);
+                                        setLoadLike(false);
+                                        //setLike(true);
+                                        //const today = new Date();
+                                        //const date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
                                         //const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-                                       // const dateTime = date+' '+time;
-                                        console.log(date);
-                                        console.log(today);
-                                        console.log(props.clip)
-                                        dispatch(likeVideo("admin", props.clip, date));
+                                        //const dateTime = date+' '+time;
+                                        //dispatch(likeVideo(props.currentUser, props.clip, today));
+                                        onLikePress();
                                     }}
                                     />
                         <Text style={styles.text}>{abbreviate(props.likes)}</Text>
@@ -322,9 +438,41 @@ const Feed = (props) => {
                     <View>
                         <Text style={styles.username}>{props.username}</Text>
                     </View>
-                    <TouchableOpacity>
+                    <View>
+                    { loadFollow && follow && (
+                        <TouchableOpacity
+                        onPress={() => {
+                            //setLoadLike(false);
+                            //setIsLoading(true)
+                            //setFollow(false);
+                            //dispatch(deleteFollowUser(videoFollows[0].id));
+                            setCurrentFollow(false);
+                            setLoadFollow(false);
+                            onFollowPress();
+                        }}
+                        >
+                        <Text style={styles.followText}>Unfollow</Text>
+                        </TouchableOpacity>
+                    )}
+                    { loadFollow && !follow && (
+                        <TouchableOpacity
+                        onPress={() => {
+                            /* 
+                            setLoadLike(false);
+                            setIsLoading(true);
+                            setFollow(true);
+                            const today = new Date();
+                            dispatch(addFollowUser(props.currentUser, props.userId, today));
+                            */
+                           setCurrentFollow(false);
+                            setLoadFollow(false);
+                            onFollowPress();
+                        }}
+                        >
                         <Text style={styles.followText}>Follow</Text>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
+                    )}
+                    </View>
                 </View>
                 <View style={styles.tag}>
                     <Text 

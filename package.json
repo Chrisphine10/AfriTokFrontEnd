@@ -9,6 +9,7 @@
     },
     "dependencies": {
         "@expo/vector-icons": "^12.0.5",
+        "@react-native-async-storage/async-storage": "^1.15.11",
         "@react-native-community/picker": "^1.8.1",
         "@react-native-community/viewpager": "^5.0.11",
         "@react-native-seoul/masonry-list": "^1.0.8",
@@ -41,6 +42,7 @@
         "expo-status-bar": "~1.0.4",
         "expo-video-thumbnails": "~5.2.1",
         "formik": "^2.2.9",
+        "lottie-react-native": "^5.0.1",
         "number-abbreviate": "^2.0.0",
         "react": "16.13.1",
         "react-dom": "16.13.1",

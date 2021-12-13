@@ -1,7 +1,9 @@
 import { ActionTypes } from "../actions/types";
 
 const initialState = {
-    videos: []
+    videos: [],
+    videoByUsers: [],
+    videosLiked: [],
 };
 
 export const videoReducer = (state = initialState, {type, payload}) => {
@@ -11,9 +13,11 @@ export const videoReducer = (state = initialState, {type, payload}) => {
         case ActionTypes.FETCH_VIDEOS_BY_SONG:
             return {...state, videos: payload};
         case ActionTypes.FETCH_VIDEOS_BY_USER:
-            return {...state, videos: payload};
+            return {...state, videoByUsers: payload};
         case ActionTypes.UPDATE_VIDEO_LIKES:
             return {...state, videos: payload};
+        case ActionTypes.FETCH_VIDEO_LIKES_BY_USER:
+            return {...state, videosLiked: payload};
         case ActionTypes.UPDATE_VIDEO_COMMENTS:
             return {...state, videos: payload};
         case ActionTypes.DELETE_VIDEO:

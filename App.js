@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Routes from './src/navigations/Routes';
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
@@ -17,7 +17,9 @@ import store from './src/api/store';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { theme } from './src/core/theme';
-
+import { AuthContext } from './src/core/context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import authAPI from './src/api/authAPi';
 const getFonts = () => Font.loadAsync({
       'AbelRegular' : require('./assets/fonts/Abel-Regular.ttf')
 });
@@ -25,31 +27,156 @@ const Stack = createStackNavigator();
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  const initialLoginState = { 
+    isLoading: true,
+    userName: null,
+    userToken: null,
+  };
+
+  const loginReducer = (prevState = initialLoginState, action) => {
+    switch (action.type) {
+      case 'RETRIEVE_TOKEN':
+        return {
+          ...prevState,
+          userToken: action.token,
+          isLoading: false,
+        };
+      case 'LOGIN':
+        return {
+          ...prevState,
+          userName: action.id,
+          userToken: action.token,
+          isLoading: false,
+        };
+      case 'LOGOUT':
+        return {
+          ...prevState,
+          userName: null,
+          userToken: null,
+          isLoading: false,
+        };
+      case 'REGISTER':
+        return {
+          ...prevState,
+          userName: action.id,
+          userToken: action.token,
+          isLoading: false,
+        };
+      default:
+        return prevState;
+    }
+  };
+  const authenticateUser = async (login, password, rememberMe) => {
+      try {
+          let response = await authAPI.post("authenticate", {
+            "password": password,
+            "rememberMe": rememberMe,
+            "username": login
+          });
+          return response.data.id_token;
+      }
+      catch (e) {
+          console.log(e);
+      }
+  };
+  const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
+  const authContext = React.useMemo(() => {
+    return {
+      signIn: async(userName, password, rememberMe) => {
+        //console.log('sign in', userName, password);
+        let userToken;
+        userToken = null;
+        let authToken = await authenticateUser(userName, password, rememberMe);
+        if(authToken !== undefined){    
+          userToken = authToken;
+          try {
+              await AsyncStorage.setItem('userToken', userToken);
+              await AsyncStorage.setItem('userName', userName);
+          } 
+          catch (e) {
+              console.log(e);
+          }
+        }
+        else {
+          alert('wrong credentials');
+        }
+        dispatch({ type: 'LOGIN', id: userName, token: userToken });
+
+      },
+      signOut: async() => {
+        console.log('sign out');
+        try {
+            await AsyncStorage.removeItem('userToken');
+        }
+        catch (e) {
+            console.log(e);
+        }
+        dispatch({ type: 'LOGOUT' });
+      },
+      signUp: () => {
+        console.log('sign up');
+      },
+      forgotPassword: () => {
+        console.log('forgot password');
+      },
+    };
+  }, []);
+
+  useEffect(() => {
+    setTimeout( async () => {
+      let userToken;
+      userToken = null;
+      try {
+        await AsyncStorage.getItem('userToken').then((value) => {
+          userToken = value;
+        });
+      } 
+      catch (e) {
+          console.log(e);
+      }
+      dispatch({ type: 'RETRIEVE_TOKEN', token: userToken });
+    }, 10);
+  }, []);
+
   if(fontsLoaded){
     return (
       <PaperProvider theme={theme}>
         <Provider 
         store={store}
         >
-          <NavigationContainer
-          >
-            <Stack.Navigator
-              initialRouteName="StartScreen"
-              screenOptions={{
-                headerShown: false,
-              }}
-              
-            >   
-              <Stack.Screen name="StartScreen" component={StartScreen} />
-              <Stack.Screen name="LoginScreen" component={LoginScreen} />
-              <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-              <Stack.Screen name="Routes" component={Routes}  />
-              <Stack.Screen
-                name="ResetPasswordScreen"
-                component={ResetPasswordScreen}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
+          <AuthContext.Provider value={authContext}>
+            <NavigationContainer
+            >
+              { loginState.userToken === null ? (
+              <Stack.Navigator
+                initialRouteName="StartScreen"
+                screenOptions={{
+                  headerShown: false,
+                }}
+                
+              >   
+                  <Stack.Screen name="StartScreen" component={StartScreen} />
+                  <Stack.Screen name="LoginScreen" component={LoginScreen} />
+                  <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+                  <Stack.Screen
+                  name="ResetPasswordScreen"
+                  component={ResetPasswordScreen}
+                  />
+              </Stack.Navigator>
+                ) : (
+                  <Stack.Navigator
+                  initialRouteName="Routes"
+                  screenOptions={{
+                    headerShown: false,
+                  }}
+                  >
+                    <Stack.Screen name="Routes" component={Routes}  />
+                  </Stack.Navigator>
+                )
+              }
+            </NavigationContainer>
+          </AuthContext.Provider>
         </Provider>
       </PaperProvider>
     );

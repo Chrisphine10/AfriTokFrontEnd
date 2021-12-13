@@ -19,23 +19,22 @@ export const addVideo = (
     ) => {
     return async function (dispatch, getState) {
         const response = await baseAPI.post("videos", {
-            body: {
-                clip: clip,
-                screenshot: screenshot, 
-                language: language,
-                post: post, 
-                privateVideo: privateVideo, 
-                duet: duet,
-                approved: approved, 
-                duration: duration,
-                likes: likes,
-                comments: comments,
-                section: section,
-                song: song,
-                user: user,
-                tags: tag,
+                "clip": clip,
+                "screenshot": screenshot, 
+                "language": language,
+                "post": post, 
+                "privateVideo": privateVideo, 
+                "duet": duet,
+                "approved": approved, 
+                "duration": duration,
+                "likes": likes,
+                "comments": comments,
+                "section": section,
+                "song": song,
+                "user": user,
+                "tags": tag,
             }
-        });
+        );
         dispatch({type: ActionTypes.ADD_VIDEO, payload: response.data});
     };
 };
@@ -59,15 +58,22 @@ export const fetchVideosByUser = (login) => {
     return async function (dispatch, getState) {
         const response = await baseAPI.get(login + "/videos");
         dispatch({type: ActionTypes.FETCH_VIDEOS_BY_USER, payload: response.data});
+        //console.log(response.data);
+    };
+};
+
+export const fetchVideosLikedByUser = (login) => {
+    return async function (dispatch, getState) {
+        const response = await baseAPI.get(login + "/videoLikes");
+        dispatch({type: ActionTypes.FETCH_VIDEO_LIKES_BY_USER, payload: response.data});
+        //console.log(response.data);
     };
 };
 
 export const updateVideoLikes = (video, totalLikes) => {
     return async function (dispatch, getState) {
         const response = await baseAPI.patch("videos/" + video.id, {
-            body: {
                 likes: totalLikes,
-                }
             });
         dispatch({type: ActionTypes.UPDATE_VIDEO_LIKES, payload: response.data});
     };
@@ -76,9 +82,7 @@ export const updateVideoLikes = (video, totalLikes) => {
 export const updateVideoComments = (video, totalComments) => {
     return async function (dispatch, getState) {
         const response = await baseAPI.patch("videos/" + video.id, {
-            body: {
                 comments: totalComments,
-                }
             });
         dispatch({type: ActionTypes.UPDATE_VIDEO_COMMENTS, payload: response.data});
     };

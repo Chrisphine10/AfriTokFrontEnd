@@ -3,13 +3,13 @@ import { View, Image, Text, Dimensions, TouchableWithoutFeedback } from 'react-n
 import MasonryList from '@react-native-seoul/masonry-list';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from "react-redux";
-import { fetchVideosByUser } from '../api/actions/videoActions';
+import { fetchVideosLikedByUser } from '../api/actions/videoActions';
 
-const MyVideos = (props) => {
+const MyVideoLikes = (props) => {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState(false);
 
-    const myvideos = useSelector(state => state.allVideos.videoByUsers);
+    const myvideos = useSelector(state => state.allVideos.videosLiked);
     const dispatch = useDispatch(); 
 
     useEffect(() => {
@@ -18,7 +18,6 @@ const MyVideos = (props) => {
         const fetchData = async () => {
             try {      
                 await setData(myvideos);
-                //console.log(myvideos);
                 if(data && data !== false) {     
                     setLoading(false);
                 }
@@ -34,7 +33,7 @@ const MyVideos = (props) => {
         let isMounted = true; 
         const fetchLikeData = async () => {
             try { 
-                dispatch(await fetchVideosByUser(props.login));
+                dispatch(await fetchVideosLikedByUser(props.login));
             } catch (e) {
                 console.warn(e);
             }
@@ -46,7 +45,7 @@ const MyVideos = (props) => {
     }, []); 
 
     if(isLoading && props.login !== null) {
-        return <View><Text>Loading...</Text></View>;
+        return <View></View>;
     }
     else {
         return (
@@ -64,7 +63,7 @@ const MyVideos = (props) => {
                         renderItem={ ({item})  => (
                             <TouchableWithoutFeedback key={item.id}>
                                 <Image
-                                    source={{uri: item.screenshot}}
+                                    source={{uri: item.video.screenshot}}
                                     lazy
                                     style={{
                                         margin: 1,
@@ -86,4 +85,4 @@ const MyVideos = (props) => {
     }
 }
 
-export default MyVideos;
+export default MyVideoLikes;

@@ -11,24 +11,26 @@ import { emailValidator } from '../../helpers/emailValidator';
 import { passwordValidator } from '../../helpers/passwordValidator';
 import { StackActions } from '@react-navigation/native';
 import styles from '../../styles/starterstyles';
-
+import { AuthContext } from '../../core/context';
 export default function LoginScreen({ navigation }) {
-  const [email, setEmail] = useState({ value: '', error: '' })
-  const [password, setPassword] = useState({ value: '', error: '' })
-
+  //const [email, setEmail] = useState({ value: '', error: '' });
+  const [userName, setUserName] = useState({ value: '', error: '' });
+  const [password, setPassword] = useState({ value: '', error: '' });
+  const [rememberMe, setRememberMe] = useState(false);
+  const { signIn } = React.useContext(AuthContext);
   const onLoginPressed = () => {
-    const emailError = emailValidator(email.value)
-    const passwordError = passwordValidator(password.value)
-    if (emailError || passwordError) {
-      setEmail({ ...email, error: emailError })
+    //const emailError = emailValidator(email.value);
+    const passwordError = passwordValidator(password.value);
+
+    //if (emailError || passwordError) {
+      if (passwordError) {
+      //setEmail({ ...email, error: emailError })
       setPassword({ ...password, error: passwordError })
-      return
+      return false;
     }
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Routes' }],
-    })
-  }
+    signIn(userName.value, password.value, rememberMe);
+    //console.log('Login successful', email.value, password.value);
+  };
 
   return (
     <Background>
@@ -36,16 +38,19 @@ export default function LoginScreen({ navigation }) {
       <Logo />
       <Header>Login</Header>
       <TextInput
-        label="Email"
+        //label="Email"
+        label="User Name"
         returnKeyType="next"
-        value={email.value}
-        onChangeText={(text) => setEmail({ value: text, error: '' })}
-        error={!!email.error}
-        errorText={email.error}
+        //value={email.value}
+        value={userName.value}
+        //onChangeText={(text) => setEmail({ value: text, error: '' })}
+        onChangeText={(text) => setUserName({ value: text, error: '' })}
+        //error={!!email.error}
+        //errorText={email.error}
         autoCapitalize="none"
-        autoCompleteType="email"
-        textContentType="emailAddress"
-        keyboardType="email-address"
+        autoCompleteType="name"
+        //textContentType="emailAddress"
+        //keyboardType="email-address"
         style={styles.button}
       />
       <TextInput

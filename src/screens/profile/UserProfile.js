@@ -4,23 +4,65 @@ import styles from '../../styles/mestyles';
 import { Picker } from '@react-native-community/picker';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Avatar } from 'react-native-paper';
-import MyVideos from '../../components/myvideos';
 import MyImages from '../../components/myimages';
+import MyVideoLikes from '../../components/myvideolikes';
 import StickyParallaxHeader from 'react-native-sticky-parallax-header';
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserDetails } from '../../api/actions/userDetailsActions';
 
 
-
-const UserProfile = ({ navigation }) => {
+const UserProfile = ({navigation, route}) => {
     const layout = useWindowDimensions();
     const [selectedValue, setSelectedValue] = useState("Account1");
-    
+
+    const [isLoaded, setIsLoaded] = useState(false);
+    const userDetails = useSelector(state => state.userDetails.details);
+
+    const [userData, setUserData] = useState(false);
+    const dispatch = useDispatch(); 
+
     const pressProfileEdit = () => {
         navigation.navigate("ProfileEdit");
     };
     const { event, ValueXY } = Animated
     const scrollY = new ValueXY()
-
+    //console.log("name", route.params.username);
     //custom back for android
+    useEffect(() => {
+        let isMounted = true;
+        const fetchData = async () => {
+            try {      
+                await setUserData(userDetails[0]);
+                //console.log(userDetails);
+                if(userData || userData === undefined && userData !== false) {     
+                    setIsLoaded(true);
+                    //console.log("userData", userData);
+                }
+            } catch (error) {
+                console.error(error);
+            } 
+        };
+        fetchData();
+        return () => isMounted = false;
+    }, [userDetails]);
+
+    useEffect(() => {
+        let isMounted = true; 
+        //console.log(route.params.username);
+        const fetchLikeData = async () => {
+            try { 
+                dispatch(await fetchUserDetails(route.params.username));
+            } catch (e) {
+                console.warn(e);
+            }
+        };
+        fetchLikeData();
+        return () => {
+            isMounted = false;
+        }
+    }, []);
+
+
     useEffect(() => {
         function handleBackButton() {
             navigation.reset({
@@ -37,28 +79,33 @@ const UserProfile = ({ navigation }) => {
 
     const renderForeground = () => (
         <View style={styles.foreground}>
+            { isLoaded ? (
             <Animated.View>
-                <View style={styles.avatar}>
-                    <Avatar.Image
-                    size={100}
-                    source={ require('../../../assets/images/avatar_default.png')}
-                    />
-                    <Text style={styles.name}>Chrisphine Otieno</Text>
-                    <Text style={styles.username}>@Pheene10</Text>
+                 <View style={styles.avatar}>
+                    { (userData.image !== null) ? (
+                        <Avatar.Image size={100} source={{ uri: userData.image }} />
+                    ) : (    
+                        <Avatar.Image
+                        size={100}
+                        source={ require('../../../assets/images/avatar_default.png')}
+                        />
+                    )}
+                    <Text style={styles.name}>{userData.user.firstName} {userData.user.lastName}</Text>
+                    <Text style={styles.username}>@{userData.user.login}</Text>
                 </View>
                 <View style={styles.follow}>
                     <TouchableOpacity 
                     style={styles.textAlign}>
-                        <Text style={styles.number}>14</Text>
+                        <Text style={styles.number}>{userData.following}</Text>
                         <Text style={styles.text}>Following</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
                     style={styles.textAlign}>
-                        <Text style={styles.number}>38</Text>
+                        <Text style={styles.number}>{userData.followers}</Text>
                         <Text style={styles.text}>Followers</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.textAlign}>
-                        <Text style={styles.number}>91</Text>
+                        <Text style={styles.number}>{userData.likes}</Text>
                         <Text style={styles.text}>Likes</Text>
                     </TouchableOpacity>
                 </View>
@@ -75,9 +122,12 @@ const UserProfile = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
                 <View>
-                    <Text style={styles.bio}>Bio Test</Text>
+                    <Text style={styles.bio}>{userData.bio}</Text>
                 </View>
             </Animated.View>
+             ) : (
+                <View><Text>Loading...</Text></View>
+            )}
         </View>
     )
     const renderHeader = () => (
@@ -106,12 +156,12 @@ const UserProfile = ({ navigation }) => {
                 {
                     title: "Videos",
                     icon: <MaterialCommunityIcons size={30} name="view-grid" color="#000" />,
-                    content: <MyImages />
+                    content: <MyImages login={route.params.username} />
                 },
                 {
                     title: "Liked",
                     icon: <MaterialCommunityIcons size={30} name="heart-multiple" color="#000" />,
-                    content: <MyVideos />
+                    content: <MyVideoLikes login={route.params.username} />
                 }
                 ]}
                 tabTextStyle={styles.tabText}
