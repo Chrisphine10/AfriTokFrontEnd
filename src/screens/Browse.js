@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchVideos } from '../api/actions/videoActions';
 import { fetchUserDetails } from '../api/actions/userDetailsActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import VideoSearch from '../components/videosearch';
 const Browse = ({ navigation }) => {
 
     const pressSearch = () => {
@@ -77,32 +77,7 @@ const Browse = ({ navigation }) => {
                 <View>
                     { data ? (
                         <View>
-                            <MasonryList
-                                data={data}
-                                keyExtractor={(item, index) => item.id.toString() }
-                                showsVerticalScrollIndicator={false}
-                                contentContainerStyle={{
-                                    margin: 0,
-                                    backgroundColor: '#fff',
-                                }} 
-                                renderItem={ ({item})  => (
-                                    <TouchableWithoutFeedback key={item.id} >
-                                        <Image
-                                            source={{ uri: item.screenshort }}
-                                            style={{
-                                                margin: 0.5,
-                                                width: Dimensions.get('window').width/3.05, 
-                                                height: Dimensions.get('window').width * 0.75,
-                                                borderRadius: 5,
-                                                resizeMode: 'cover',
-
-                                            }}
-                                            loading="lazy"
-                                            />
-                                    </TouchableWithoutFeedback>
-                                )}
-                                numColumns={3}
-                            />
+                            <VideoSearch data={data} />
                         </View>
                     ) : (<View><Text>No video found!</Text></View>)}
                 </View>

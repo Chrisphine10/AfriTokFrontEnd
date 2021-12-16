@@ -20,6 +20,7 @@ import { theme } from './src/core/theme';
 import { AuthContext } from './src/core/context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import authAPI from './src/api/authAPi';
+import {decode, encode} from 'base-64';
 const getFonts = () => Font.loadAsync({
       'AbelRegular' : require('./assets/fonts/Abel-Regular.ttf')
 });
@@ -32,6 +33,23 @@ export default function App() {
     isLoading: true,
     userName: null,
     userToken: null,
+  };
+  function atob(data) { 
+    return new Buffer(data, "base64").toString("binary"); 
+  }
+  const parseJwt = (token) => {
+    if (!global.btoa) { 
+      global.btoa = encode 
+    }
+    if (!global.atob) { 
+      global.atob = decode 
+    }
+    try{
+      return global.atob(token.split(".")[1]);
+    } catch(e){
+      console.log(e);
+    }
+  
   };
 
   const loginReducer = (prevState = initialLoginState, action) => {
@@ -131,6 +149,20 @@ export default function App() {
         await AsyncStorage.getItem('userToken').then((value) => {
           userToken = value;
         });
+        if(userToken){
+          const decodedJwt = parseJwt(userToken);
+          const expiration = new Date(decodedJwt.exp);
+          const now = new Date();
+          const fiveMinutes = 1000 * 60 * 500;
+
+          if( expiration.getTime() - now.getTime() < fiveMinutes ){
+            //console.log("JWT has expired or will expire soon");
+            authContext.signOut();
+          } else {
+            console.log("JWT is valid for more than 5 minutes", decodedJwt);
+            //authContext.signOut();
+          }
+        }
       } 
       catch (e) {
           console.log(e);

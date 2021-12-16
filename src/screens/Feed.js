@@ -67,6 +67,8 @@ const Feed = (props) => {
     const [loadFollow, setLoadFollow] = useState(false);
     const isFirstRunFollow = useRef(true);
     const isFirstRunLike = useRef(true);
+    const isSecondRunLike = useRef(true);
+    const isSecondRunFollow = useRef(true);
     //const [isLoading, setIsLoading] = useState(true);
     const commentHeight = (80 * 13);
     const spinValue = new Animated.Value(0);
@@ -238,6 +240,9 @@ const Feed = (props) => {
         if (isFirstRunFollow.current) {
             isFirstRunFollow.current = false;
         }
+        else if(isSecondRunFollow.current && !isFirstRunFollow.current) {
+            isSecondRunFollow.current = false;
+        }
         else {
             fetchData();
             setLoadFollow(true);
@@ -338,8 +343,6 @@ const Feed = (props) => {
                                 onPress={() => {
                                     setCurrentLike(false);
                                     setLoadLike(false)
-                                    //setLike(false);
-                                    //dispatch(deleteLikeVideo(videoLikes[0]));
                                     onLikePress();
                                 }}
                                 />
@@ -451,7 +454,6 @@ const Feed = (props) => {
                             onFollowPress();
                         }}
                         >
-                        <Text style={styles.followText}>Unfollow</Text>
                         </TouchableOpacity>
                     )}
                     { loadFollow && !follow && (

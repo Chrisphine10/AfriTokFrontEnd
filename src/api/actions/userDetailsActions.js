@@ -17,8 +17,14 @@ export const addUserDetails = (bio, countryCode, phone, user, image) => {
 export const fetchUserDetails = (login) => {
     return async function (dispatch, getState) {
         const response = await baseAPI.get("{login}/user-details?login=" + login);
-        //console.log(response.data);
         dispatch({type: ActionTypes.FETCH_USER_DETAILS, payload: response.data});
+    };
+};
+
+export const fetchAllUsers = () => {
+    return async function (dispatch, getState) {
+        const response = await baseAPI.get("afrotok-users");
+        dispatch({type: ActionTypes.FETCH_ALL_USERS, payload: response.data});
     };
 };
 

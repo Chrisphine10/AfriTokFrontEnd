@@ -22,8 +22,8 @@ export default StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
-        marginRight: 70,
-        marginLeft: 70,
+        marginRight: 60,
+        marginLeft: 60,
         padding: 10,
      },
      followUser: {
@@ -97,7 +97,7 @@ export default StyleSheet.create({
          height: 1000,
          marginTop: 50
        },
-       foreground: {
+      foreground: {
          flex: 1,
          justifyContent: 'flex-end'
        },

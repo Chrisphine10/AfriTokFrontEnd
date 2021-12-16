@@ -14,6 +14,8 @@ export const followReducer = (state = initialState, {type, payload}) => {
             return {...state, follow: payload};
         case ActionTypes.CLEAR_FOLLOW_USER:
             return {...state, follow: []};
+        case ActionTypes.FETCH_USER_FOLLOWS:
+            return {...state, follow: payload};
         default:
             return state;
       }

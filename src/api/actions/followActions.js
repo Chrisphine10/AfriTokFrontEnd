@@ -27,6 +27,13 @@ export const fetchFollowUser = (login, id) => {
     };
 };
 
+export const fetchUserFollows = (login) => {
+    return async function (dispatch, getState) {
+        const response = await baseAPI.get(login + "/follows");
+        dispatch({type: ActionTypes.FETCH_USER_FOLLOWS, payload: response.data});
+    };
+};
+
 export const removeCurrentFollowUser = () => {
     return {
         type: ActionTypes.CLEAR_FOLLOW_USER,

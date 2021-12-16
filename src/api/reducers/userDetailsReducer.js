@@ -14,6 +14,8 @@ export const userDetailsReducer = (state = initialState, {type, payload}) => {
             return {...state, details: payload};
         case ActionTypes.DELETE_USER_DETAILS:
             return {...state, details: payload};
+        case ActionTypes.FETCH_ALL_USERS:
+            return {...state, details: payload};
         default:
             return state;
       }
