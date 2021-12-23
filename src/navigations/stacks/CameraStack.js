@@ -38,9 +38,6 @@ function CameraStack() {
             name="Edit" component={Edit}
              />
         <Stack.Screen  
-            options={{ 
-              headerShown: false,
-            }}
             name="Post" component={Post}
              />
         

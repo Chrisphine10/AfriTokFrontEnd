@@ -30,7 +30,6 @@ export const fetchVideoLikes = (video) => {
 export const fetchUserVideoLikes = (login, video) => {
     return async function (dispatch, getState) {
         const response = await baseAPI.get(login + "/videos/{id}/videoLike?id=" + video);
-        //console.log(response.data);
         dispatch({type: ActionTypes.FETCH_USER_VIDEO_LIKES, payload: response.data});
     };
 };

@@ -101,8 +101,7 @@ export default function App() {
   const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
   const authContext = React.useMemo(() => {
     return {
-      signIn: async(userName, password, rememberMe) => {
-        //console.log('sign in', userName, password);
+      signIn: async (userName, password, rememberMe) => {
         let userToken;
         userToken = null;
         let authToken = await authenticateUser(userName, password, rememberMe);
@@ -159,7 +158,7 @@ export default function App() {
             //console.log("JWT has expired or will expire soon");
             authContext.signOut();
           } else {
-            console.log("JWT is valid for more than 5 minutes", decodedJwt);
+            //console.log("JWT is valid for more than 5 minutes", decodedJwt);
             //authContext.signOut();
           }
         }

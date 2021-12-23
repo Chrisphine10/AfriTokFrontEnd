@@ -12,6 +12,7 @@ import { fetchVideos } from '../api/actions/videoActions';
 import { removeCurrentLike } from '../api/actions/videoLikeActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fetchUserDetails } from '../api/actions/userDetailsActions';
+import { AuthContext } from '../../src/core/context';
 const PagerView = Animated.createAnimatedComponent(PageView);
 
 const Home = ({ navigation }) => {
@@ -79,6 +80,7 @@ const Home = ({ navigation }) => {
         try {
         dispatch(fetchVideos());
         } catch (error) {
+            AuthContext.signOut();
             console.error(error);
         };
 

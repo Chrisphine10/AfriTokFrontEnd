@@ -1,5 +1,5 @@
 import React, {useRef, useState, useCallback, useEffect} from 'react';
-import { Text, View, StyleSheet, SafeAreaView, Alert, Button } from 'react-native';
+import { Text, View, StyleSheet, SafeAreaView, Alert, Button, TouchableOpacity } from 'react-native';
 import { Ionicons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { MediaType } from 'expo-media-library';
@@ -17,35 +17,41 @@ export default function EditVideo({navigation, route}) {
         routes: [{ name: 'Record' }],
       })
   }
+
+  const gotoPost = (video) => {
+    navigation.navigate("Post", {
+        video: video
+    });
+  }
+
   const video = useRef(null);
   const [status, setStatus] = useState({});
   const [record, setRecord] = useState(null);
   const [position, setPosition] = useState(0);
-
-  const onPositionChange = useCallback(
-    async (pos) => {
-      if (!video.current) return;
-
-      await video.current.setPositionAsync(pos);
-      setPosition(pos);
-    }, [position]
-  );
+  const [data, setData] = useState(null);
 
   //const { params } = route.params;
   useEffect(() => {
       if (route.params.videoClip) {
         setRecord(route.params.videoClip[0].uri);
+        setData(route.params.videoClip[0]);
         //console.log(route.params.videoClip[0].uri);
       }
       else if(route.params.recordClip){
         setRecord(route.params.recordClip.uri);
+        setData(route.params.recordClip);
         //console.log(route.params.recordClip.uri);
       }
   }, []);
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.AndroidSafeArea}>
-        <View style={styles.container}>
+        <View 
+         //title={status.isPlaying ? 'Pause' : 'Play'}
+        //  onPress={() =>
+        //    status.isPlaying ? video.current.pauseAsync() : video.current.playAsync()
+        //  }
+        style={styles.container}>
           <Video
             ref={video}
             style={styles.video}
@@ -57,29 +63,24 @@ export default function EditVideo({navigation, route}) {
             isLooping
             onPlaybackStatusUpdate={status => setStatus(() => status)}
           />
-           <Slider
-              style={{ width: 200, height: 40 }}
-              minimumValue={0}
-              maximumValue={20000}
-              step={200}
-              minimumTrackTintColor="#FFFFFF"
-              maximumTrackTintColor="#000000"
-              onValueChange={onPositionChange}
-            />
-        <View style={styles.buttons}>
-          <Button
-            title={status.isPlaying ? 'Pause' : 'Play'}
-            onPress={() =>
-              status.isPlaying ? video.current.pauseAsync() : video.current.playAsync()
-            }
-          />
-          <Button 
-          title='Back'
-            onPress = {
-              () => goBack()
-            }
-          />
-        </View>
+          <View style={styles.row}>
+            <View style={styles.buttons}>
+              <Button 
+              title='Cancel'
+                onPress = {
+                  () => goBack()
+                }
+              />
+            </View>
+            <View style={styles.buttons}>
+              <Button 
+              title='Create Post'
+                onPress = {
+                  () => gotoPost(data)
+                }
+              />
+            </View>
+          </View>
         </View>
       </SafeAreaView>
     </SafeAreaProvider>

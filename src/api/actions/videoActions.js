@@ -53,12 +53,10 @@ export const fetchVideosBySong = (song) => {
     };
 };
 
-
 export const fetchVideosByUser = (login) => {
     return async function (dispatch, getState) {
         const response = await baseAPI.get(login + "/videos");
         dispatch({type: ActionTypes.FETCH_VIDEOS_BY_USER, payload: response.data});
-        //console.log(response.data);
     };
 };
 
@@ -66,7 +64,6 @@ export const fetchVideosLikedByUser = (login) => {
     return async function (dispatch, getState) {
         const response = await baseAPI.get(login + "/videoLikes");
         dispatch({type: ActionTypes.FETCH_VIDEO_LIKES_BY_USER, payload: response.data});
-        //console.log(response.data);
     };
 };
 

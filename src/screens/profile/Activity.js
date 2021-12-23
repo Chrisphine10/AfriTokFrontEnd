@@ -3,7 +3,7 @@ import { View, Text, ScrollView, SafeAreaView, TouchableOpacity} from 'react-nat
 import styles from '../../styles/activitystyles';
 import Notifications from '../../components/notification';
 import { Picker } from '@react-native-community/picker';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 
 const Activity = ({ navigation }) => {
     const [selectedValue, setSelectedValue] = useState("Activity");
@@ -27,7 +27,7 @@ const Activity = ({ navigation }) => {
                 <TouchableOpacity
                 onPress={pressInbox}
                 style={{}}>
-                    <MaterialCommunityIcons size={30} name="message-arrow-right" color="#000" />
+                    <FontAwesome size={30} name="send" color="#000" />
                 </TouchableOpacity>
             </View>
             <View>
