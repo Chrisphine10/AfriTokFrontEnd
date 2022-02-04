@@ -9,14 +9,14 @@ import MyVideoLikes from '../../components/myvideolikes';
 import StickyParallaxHeader from 'react-native-sticky-parallax-header';
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserDetails } from '../../api/actions/userDetailsActions';
-
+import AnimatedLoader from "react-native-animated-loader";
 
 const UserProfile = ({navigation, route}) => {
     const layout = useWindowDimensions();
     const [selectedValue, setSelectedValue] = useState("Account1");
 
     const [isLoaded, setIsLoaded] = useState(false);
-    const userDetails = useSelector(state => state.userDetails.details);
+    const userDetails = useSelector(state => state.userDetails.login);
 
     const [userData, setUserData] = useState(false);
     const dispatch = useDispatch(); 
@@ -126,7 +126,15 @@ const UserProfile = ({navigation, route}) => {
                 </View>
             </Animated.View>
              ) : (
-                <View><Text>Loading...</Text></View>
+                <View> 
+                    <AnimatedLoader
+                        visible={!isLoaded}
+                        overlayColor="rgba(255,255,255,1)"
+                        source={require("../../../assets/blackhand.json")}
+                        animationStyle={styles.lottie}
+                        speed={1}
+                    />
+                </View>
             )}
         </View>
     )

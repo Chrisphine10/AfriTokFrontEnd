@@ -4,6 +4,7 @@ const initialState = {
     videos: [],
     videoByUsers: [],
     videosLiked: [],
+    videoAdded: [],
 };
 
 export const videoReducer = (state = initialState, {type, payload}) => {
@@ -23,7 +24,9 @@ export const videoReducer = (state = initialState, {type, payload}) => {
         case ActionTypes.DELETE_VIDEO:
             return {...state, videos: payload};
         case ActionTypes.ADD_VIDEO:
-            return {...state, videos: payload};
+            return {...state, videoAdded: payload};
+        case ActionTypes.REMOVE_CURRENT_VIDEO:
+            return initialState;
         default:
             return state;
       }

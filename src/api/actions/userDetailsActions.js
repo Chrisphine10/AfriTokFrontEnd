@@ -1,15 +1,19 @@
 import baseAPI from '../baseAPI';
 import { ActionTypes } from "./types";
 
-export const addUserDetails = (bio, countryCode, phone, user, image) => {
+export const addUserDetails = (details) => {
     return async function (dispatch, getState) {
         const response = await baseAPI.post("afrotok-users", {
-            "bio": bio,
-            "image": image,
-            "countryCode": countryCode,
-            "phone": phone,
-            "user": user,
+            "bio": details.bio,
+            "image": details.image,
+            "countryCode": details.countryCode,
+            "phone": details.phone,
+            "user": details.user,
+            following: 0,
+            followers: 0,
+            likes: 0,
         });
+        //console.log(response.data);
         dispatch({type: ActionTypes.ADD_USER_DETAILS, payload: response.data});
     };
 };
@@ -28,9 +32,19 @@ export const fetchAllUsers = () => {
     };
 };
 
-export const updateUserDetails = (id) => {
+export const updateUserDetails = (user) => {
     return async function (dispatch, getState) {
-        const response = await baseAPI.put("afrotok-users/" + id);
+        const response = await baseAPI.put("afrotok-users/" + user.id, {
+            "id": user.id,
+            "bio": user.bio,
+            "image": user.image,
+            "countryCode": user.countryCode,
+            "phone": user.phone,
+            "following": user.following,
+            "followers": user.followers,
+            "likes": user.likes,
+            "user": user.user,
+        });
         dispatch({type: ActionTypes.UPDATE_USER_DETAILS, payload: response.data});
     };
 };
@@ -40,5 +54,11 @@ export const deleteUserDetails = (id) => {
         const response = await baseAPI.delete("afrotok-users/" + id);
         dispatch({type: ActionTypes.DELETE_USER_DETAILS, payload: response.data});
     };
+};
+
+export const removeUserDetails = () => {
+    return {
+        type: ActionTypes.REMOVE_CURRENT_USER_DETAILS,
+    }
 };
 

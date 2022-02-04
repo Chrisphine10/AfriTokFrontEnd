@@ -18,6 +18,7 @@ export const addVideo = (
     tag
     ) => {
     return async function (dispatch, getState) {
+        const today = new Date();
         const response = await baseAPI.post("videos", {
                 "clip": clip,
                 "screenshot": screenshot, 
@@ -33,6 +34,7 @@ export const addVideo = (
                 "song": song,
                 "user": user,
                 "tags": tag,
+                "createdAt": today,
             }
         );
         dispatch({type: ActionTypes.ADD_VIDEO, payload: response.data});
@@ -90,4 +92,10 @@ export const deleteVideo= (video) => {
         const response = await baseAPI.get("videos/" + video.id);
         dispatch({type: ActionTypes.DELETE_VIDEO, payload: response.data});
     };
+};
+
+export const removeCurrentVideo = () => {
+    return {
+        type: ActionTypes.REMOVE_CURRENT_VIDEO,
+    }
 };

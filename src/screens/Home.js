@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { RefreshControl, View, Animated,  Text, Image } from 'react-native';
 import PageView from 'react-native-pager-view';
 import Feed from './Feed';
@@ -8,15 +8,17 @@ import styles from '../styles/homestyles';
 import { useIsFocused } from '@react-navigation/native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from "react-redux";
-import { fetchVideos } from '../api/actions/videoActions';
+import { fetchVideos, removeCurrentVideo } from '../api/actions/videoActions';
 import { removeCurrentLike } from '../api/actions/videoLikeActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fetchUserDetails } from '../api/actions/userDetailsActions';
 import { AuthContext } from '../../src/core/context';
+import AnimatedLoader from "react-native-animated-loader";
+
 const PagerView = Animated.createAnimatedComponent(PageView);
 
 const Home = ({ navigation }) => {
-   
+
     const [tab, setTab] = useState(1);
     const [active, setActive] = useState(true);
     const [data, setData] = useState(false);
@@ -30,25 +32,30 @@ const Home = ({ navigation }) => {
     }, []);
 
     const dispatch = useDispatch();
-// const fetchData = async () => {  
-//     try {
-//         const videos = await Videos();
-//         dispatch(fetchVideos(videos));
-//         setIsLoading(false);
+    // const fetchData = async () => {  
+    //     try {
+    //         const videos = await Videos();
+    //         dispatch(fetchVideos(videos));
+    //         setIsLoading(false);
 
-//     } catch (error) {
-//         console.error(error);
-//     };
-// };
+    //     } catch (error) {
+    //         console.error(error);
+    //     };
+    // };
+
     const videos = useSelector(state => state.allVideos.videos);
-    const userDetails = useSelector(state => state.userDetails.details);
+    const userDetails = useSelector(state => state.userDetails.login);
+    //console.log('userDetails', userDetails);
     useEffect(() => {
         let isMounted = true;
         const fetchData = async () => {
-            try {      
-                await setData(videos);
+            try {  
+                if(videos !== []) {
+                    await setData(videos);
+                }
                 await setLoggedUser(userDetails[0]);
-                if(data && data !== [] && loggedUser) {     
+                if(data && data !== [] && loggedUser) { 
+                    //console.log('data', data);    
                     setIsLoading(false);
                 }
             } catch (error) {
@@ -57,14 +64,18 @@ const Home = ({ navigation }) => {
         };
         fetchData();
         return () => isMounted = false;
-    }, [videos, userDetails]);
+    }, [videos]);
 
     useEffect(() => {
         let isMounted = true; 
+        setIsLoading(true);
+        //console.log('isMounted', isMounted);
         const fetchLikeData = async () => {
             try { 
                 const login = await AsyncStorage.getItem('userName');
+                //console.log('data', login);  
                 dispatch(await fetchUserDetails(login));
+                dispatch(await removeCurrentVideo());
             } catch (e) {
                 console.warn(e);
             }
@@ -78,7 +89,7 @@ const Home = ({ navigation }) => {
     useEffect(() => {
         let isMounted = true; 
         try {
-        dispatch(fetchVideos());
+            dispatch(fetchVideos());
         } catch (error) {
             AuthContext.signOut();
             console.error(error);
@@ -138,7 +149,7 @@ const Home = ({ navigation }) => {
                     orientation= "vertical"
                     onPageScroll={onPageScroll}
                     >
-                    {data.map((item, index) => 
+                    { data.map((item, index) => 
                         (
                                 <View key={index}>
                                 { (clip == index) && (
@@ -156,7 +167,7 @@ const Home = ({ navigation }) => {
                                         likes={item.likes}
                                         play={(item.id) ? active : !active } 
                                         clip={item}
-                                        //image={item.screenshot}
+                                        image={item.screenshot}
                                     />
                                 )}
                                 </View>                  
@@ -166,6 +177,19 @@ const Home = ({ navigation }) => {
                     </PagerView>
                 </View>
                 )}
+                {
+                    isLoading && (   
+                        <View>
+                            <AnimatedLoader
+                            visible={!isLoaded}
+                            overlayColor="rgba(255,255,255,1)"
+                            source={require("../../assets/blackhand.json")}
+                            animationStyle={styles.lottie}
+                            speed={1}
+                            />
+                        </View>
+                    )
+                }
             </View>
         </SafeAreaView>
     )

@@ -8,6 +8,8 @@ import { thumbnailReducer } from "./thumbnailReducer";
 import { songReducer } from "./songReducer";
 import { albumReducer } from "./albumReducer";
 import { tagReducer } from "./tagReducer";
+import { loginReducer } from "./loginReducer";
+import { notificationReducer } from "./notificationReducer";
 
 
 export default reducers = combineReducers({
@@ -20,4 +22,6 @@ export default reducers = combineReducers({
     allTags: tagReducer,
     allSongs: songReducer,
     allAlbums: albumReducer,
+    loginDetails: loginReducer,
+    allNotifications: notificationReducer,
 });

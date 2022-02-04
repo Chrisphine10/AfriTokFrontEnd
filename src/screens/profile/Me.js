@@ -8,15 +8,16 @@ import MyVideos from '../../components/myvideos';
 import MyVideoLikes from '../../components/myvideolikes';
 import StickyParallaxHeader from 'react-native-sticky-parallax-header';
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserDetails } from '../../api/actions/userDetailsActions';
+import { fetchUserDetails, removeUserDetails } from '../../api/actions/userDetailsActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AnimatedLoader from "react-native-animated-loader";
 
 const Me = ({ navigation, props }) => {
     
     const [userData, setUserData] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
 
-    const userDetails = useSelector(state => state.userDetails.details);
+    const userDetails = useSelector(state => state.userDetails.login);
     const dispatch = useDispatch(); 
 
     useEffect(() => {
@@ -34,13 +35,17 @@ const Me = ({ navigation, props }) => {
         fetchData();
         return () => isMounted = false;
     }, [userDetails]);
-    
+
     useEffect(() => {
-        let isMounted = true; 
+        let isMounted = true;
         const fetchLikeData = async () => {
-            try { 
+            try {
                 const login = await AsyncStorage.getItem('userName');
                 dispatch(await fetchUserDetails(login));
+                
+                if(userDetails.length === 0) {
+                    dispatch(await removeUserDetails());
+                }
             } catch (e) {
                 console.warn(e);
             }
@@ -125,7 +130,15 @@ const Me = ({ navigation, props }) => {
                 </View>
             </Animated.View>
             ) : (
-                <View><Text>Loading...</Text></View>
+                <View>
+                    <AnimatedLoader
+                        visible={!isLoaded}
+                        overlayColor="rgba(255,255,255,1)"
+                        source={require("../../../assets/blackhand.json")}
+                        animationStyle={styles.lottie}
+                        speed={1}
+                    />
+                </View>
             )}
         </View>
     )
@@ -169,7 +182,7 @@ const Me = ({ navigation, props }) => {
             header={renderHeader}
             transparentHeader={false}
             parallaxHeight={350}
-            headerHeight={100}
+            headerHeight={70}
             snapValue={0}
             snapToEdge={false}
             hasBorderRadius={false}

@@ -62,15 +62,16 @@ const Browse = ({ navigation }) => {
                 style={styles.search}>
                     <Searchbar
                         style={{
-                            borderRadius: 30,
+                            borderRadius: 5,
                             height: 40,
+                            backgroundColor: '#fff',
                         }}
                         inputStyle={{
                             fontSize: 14,
                             fontFamily: 'AbelRegular',
                         }}
                         selectTextOnFocus={false}
-                        placeholder="Search"
+                        placeholder="Search for Users, Videos and Songs ..."
                         editable={false}
                     />
                 </TouchableOpacity>

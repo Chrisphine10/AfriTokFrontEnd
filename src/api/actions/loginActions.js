@@ -1,34 +1,39 @@
+import authAPi from '../authAPi';
 import baseAPI from '../baseAPI';
+import adminAPI from '../adminAPI';
 
 import { ActionTypes } from "./types";
 
 export const fetchUser = (login) => {
     return async function (dispatch, getState) {
-        const response = await baseAPI.get("admin/users/" + login);
+        const response = await authAPi.get("admin/users/" + login);
+        //console.log('response', response);
         dispatch({type: ActionTypes.FETCH_USER, payload: response.data});
     };
 };
 
-export const registerUser = (
-    login,
-    date,
-    email,
-    firstName,
-    lastName,
-    password,
-    ) => {
+export const fetchAllUsers = () => {
     return async function (dispatch, getState) {
-        const response = await baseAPI.post("admin/users", {
-            "activated": false,
+        const response = await authAPi.get("admin/users");
+        dispatch({type: ActionTypes.FETCH_ALL_USERS, payload: response.data});
+    };
+};
+
+export const registerUser = (user) => {
+    const today = new Date();
+    return async function (dispatch, getState) {
+        const response = await authAPi.post("register", {
+            "activated": user.activated,
             "authorities": [
                 "ROLE_USER"
             ],
             "createdBy": "InApp",
-            "createdDate": date,
-            "email": email,
-            "firstName": firstName,
-            "lastName": lastName,
-            "login": userName
+            "createdDate": today,
+            "email": user.email,
+            "firstName": user.firstName,
+            "lastName": user.lastName,
+            "login": user.login,
+            "password": user.password,
           });
         dispatch({type: ActionTypes.REGISTER_USER, payload: response.data});
     };
@@ -45,35 +50,26 @@ export const authenticateUser = (login, password, rememberMe) => {
     };
 };
 
-export const updateUser = (
-    id,
-    login,
-    email,
-    firstName,
-    lastName,
-    password,
-    activated,
-    authorities,
-    createdBy,
-    createdDate,
-    lastModifiedBy,
-    lastModifiedDate,
-) => {
+export const updateUser = (user) => {
+    const today = new Date();
     return async function (dispatch, getState) {
-        const response = await baseAPI.put("admin/users",{
-            "activated": activated,
+        const response = await adminAPI.put("admin/users", {
             "authorities": [
-              authorities
+                user.authorities,
             ],
-            "createdBy": createdBy,
-            "createdDate": createdDate,
-            "email": email,
-            "firstName": firstName,
-            "id": id,
-            "lastModifiedBy": lastModifiedBy,
-            "lastModifiedDate": lastModifiedDate,
-            "lastName": lastName,
-            "login": login,
+            "email": user.email,
+            "firstName": user.firstName,
+            "id": user.id,
+            "lastModifiedBy": user.login,
+            "lastModifiedDate": today,
+            "lastName": user.lastName,
+            "login": user.login,
+            "langKey": user.langKey,
+            "imageUrl": user.imageUrl,
+            "activated": user.activated,
+            "createdBy": user.createdBy,
+            "createdDate": user.createdDate,
+            
           });
         dispatch({type: ActionTypes.UPDATE_USER, payload: response.data});
     };
@@ -121,4 +117,10 @@ export const activateUser = (login) => {
         const response = await baseAPI.delete(login + "afrotok-users/");
         dispatch({type: ActionTypes.ACTIVATE_USER, payload: response.data});
     };
+};
+
+export const removeCurrentUser = () => {
+    return {
+        type: ActionTypes.REMOVE_CURRENT_USER,
+    }
 };

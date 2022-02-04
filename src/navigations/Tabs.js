@@ -13,11 +13,10 @@ import CameraStack from './stacks/CameraStack';
 import MeStack from './stacks/MeStack';
 import InboxStack from './stacks/InboxStack';
 import SearchStack from './stacks/SearchStack';
-//import { RecordStack } from '../screens/login/index';
 
 const BottomTab = createMaterialBottomTabNavigator();
 
-const Tabs = () => {
+const Tabs = (route) => {
     const [home, setHome] = useState(true);
     const [tabVisibility, setTabVisibility] = useState(null);
     StatusBar.setBarStyle('dark-content');
@@ -31,7 +30,7 @@ const Tabs = () => {
       } else {
         StatusBar.setHidden(false);
     }
-
+    
     return (
         <BottomTab.Navigator
         shifting={true} 
@@ -98,6 +97,7 @@ const Tabs = () => {
             listeners={({ navigation, route }) => ({
               tabPress: e => {
                 navigation.navigate(route.name);
+                //console.log(route.name);
               },
             })}
             options={{

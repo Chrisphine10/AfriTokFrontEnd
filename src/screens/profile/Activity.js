@@ -27,7 +27,7 @@ const Activity = ({ navigation }) => {
                 <TouchableOpacity
                 onPress={pressInbox}
                 style={{}}>
-                    <FontAwesome size={30} name="send" color="#000" />
+                    <FontAwesome size={20} name="send" color="#000" />
                 </TouchableOpacity>
             </View>
             <View>

@@ -2,6 +2,14 @@ import { StyleSheet, Dimensions, Platform, StatusBar } from 'react-native';
 import { theme } from '../core/theme';
 
 export default StyleSheet.create({
+    passwordContainer: {
+        flexWrap: 'wrap',
+        padding: 5,
+        borderRadius: 4,
+        backgroundColor: '#cd9115',
+        flexDirection: 'row',
+        alignContent: 'center',
+    },
     button: {
         borderRadius: 30,
     },

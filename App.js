@@ -21,6 +21,7 @@ import { AuthContext } from './src/core/context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import authAPI from './src/api/authAPi';
 import {decode, encode} from 'base-64';
+
 const getFonts = () => Font.loadAsync({
       'AbelRegular' : require('./assets/fonts/Abel-Regular.ttf')
 });
@@ -158,8 +159,8 @@ export default function App() {
             //console.log("JWT has expired or will expire soon");
             authContext.signOut();
           } else {
-            //console.log("JWT is valid for more than 5 minutes", decodedJwt);
             //authContext.signOut();
+            //console.log("JWT is valid for more than 5 minutes", decodedJwt);
           }
         }
       } 

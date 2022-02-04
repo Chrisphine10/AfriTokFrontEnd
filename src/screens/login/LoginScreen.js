@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TouchableOpacity, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import Background from '../../components/custom/Background';
@@ -12,18 +12,90 @@ import { passwordValidator } from '../../helpers/passwordValidator';
 import { StackActions } from '@react-navigation/native';
 import styles from '../../styles/starterstyles';
 import { AuthContext } from '../../core/context';
-export default function LoginScreen({ navigation }) {
+import { addUserDetails } from '../../api/actions/userDetailsActions';
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUser } from '../../api/actions/loginActions';
+
+export default function LoginScreen({navigation, route}) {
   //const [email, setEmail] = useState({ value: '', error: '' });
   const [userName, setUserName] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
-  const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
+  const [registerUserName, setRegisterUserName] = useState(null);
+  const [registerPassword, setRegisterPassword] = useState(null);
+  const [loggingIn, setLoggingIn] = useState(false);
   const { signIn } = React.useContext(AuthContext);
+  const dispatch = useDispatch();
+  const users = useSelector(state => state.loginDetails.login);
+  console.log('users', users);
+
+  useEffect(() => {
+    let isMounted = true; 
+    const fetchData = async () => {
+      if(route.params) {  
+        if(route.params.user) {
+          console.log('tested', route.params.user);
+          setRegisterUserName(route.params.user.login);
+          setRegisterPassword(route.params.password);
+          dispatch(await fetchUser(route.params.user.login.toLowerCase()));
+        }
+      }
+    }
+    fetchData();
+    return () => isMounted = false;
+  }, [route.params]);
+
+  useEffect(() => {
+    let isMounted = true; 
+    const fetchData = () => {
+      if(loggingIn === true) {
+        setTimeout(() => {
+          signIn(registerUserName, registerPassword, rememberMe); 
+        }, 2000);
+      }
+    }
+    fetchData();
+    return () => isMounted = false;
+  }, [loggingIn]);
+
+
+  useEffect(() => {
+    let isMounted = true; 
+
+    const addData = async () => {
+      const currentuser = {
+        login: users.login,
+        id: users.id
+      }
+      const details = {
+        "bio": "null",
+        "image": "null",
+        "countryCode": "null",
+        "phone": "null",
+        "user": currentuser,
+      }
+      if(registerUserName !== null && registerPassword !== null) { 
+        dispatch(await addUserDetails(details));
+        await setLoggingIn(true);
+      }
+    }
+    try {
+      if(users.login !== null) {
+        addData();
+      }
+    } catch (error) {
+        console.error(error);
+    };
+
+    return () => isMounted = false;
+  }, [registerUserName, registerPassword, users]);
+
   const onLoginPressed = () => {
     //const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
 
     //if (emailError || passwordError) {
-      if (passwordError) {
+    if (passwordError) {
       //setEmail({ ...email, error: emailError })
       setPassword({ ...password, error: passwordError })
       return false;

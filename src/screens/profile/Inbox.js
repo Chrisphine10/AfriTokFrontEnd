@@ -1,31 +1,19 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, SafeAreaView, TouchableOpacity} from 'react-native';
+import { View, Text, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
 import styles from '../../styles/inboxstyles';
-import Messages from '../../components/messages';
+import ChatView from '../../components/ChatView';
 
-const Inbox = () => {
+const Inbox = ({route, navigator}) => {
     return (
         <SafeAreaView style={styles.AndroidSafeArea}>
-                <ScrollView style={{}}>
-                    <Messages />
-                    <Messages />
-                    <Messages />
-                    <Messages />
-                    <Messages />
-                    <Messages />
-                    <Messages />
-                    <Messages />
-                    <Messages />
-                    <Messages />
-                    <Messages />
-                    <Messages />
-                    <Messages />
-                    <Messages />
-                    <Messages />
-                    <Messages />
-                    <Messages />
-                    <Messages />
-                </ScrollView>
+            <View>
+                <ChatView 
+                id="ChatView"
+                navigator={navigator}
+                name={route.name}
+                image={route.image}
+                /> 
+            </View> 
         </SafeAreaView>
     )
 }

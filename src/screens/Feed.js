@@ -18,6 +18,7 @@ import Comments from '../components/post_comment';
 import SlideAnimated from 'react-native-reanimated';
 import BottomSheet from 'reanimated-bottom-sheet';
 import LottieView from 'lottie-react-native';
+import { useIsFocused } from '@react-navigation/native';
 //import * as VideoThumbnails from 'expo-video-thumbnails';
 import { useDispatch, useSelector } from "react-redux";
 import { 
@@ -72,6 +73,7 @@ const Feed = (props) => {
     //const [isLoading, setIsLoading] = useState(true);
     const commentHeight = (80 * 13);
     const spinValue = new Animated.Value(0);
+    const screenIsFocused = useIsFocused();
     const renderContent = () => (
         <View
           style={{
@@ -127,6 +129,17 @@ const Feed = (props) => {
 
     const videoRef = useRef();
    
+    // useEffect(() => {
+    //     const unsubscribe = props.navigation.addListener('blur', () => {
+    //       console.log('Leaving Home Screen');
+    //       setPause(false); 
+    
+    //       // new code add to pause video from ref
+    //       videoRef.current.pauseVideo();
+    //     });
+    
+    //     return unsubscribe;
+    // }, [props.navigation]);
   
   // play and pause video
     const onPlayPause = () => {
@@ -164,6 +177,7 @@ const Feed = (props) => {
 
     useEffect(() => {
         let isMounted = true;
+        //console.log(screenIsFocused)
         const clearData = async () => {
             dispatch(await removeCurrentFollowUser());
             dispatch(await removeCurrentLike());
@@ -172,7 +186,7 @@ const Feed = (props) => {
         return () => {
             isMounted = false;
         }
-    }, []);
+    }, [props.username]);
 
     useEffect(() => {
         let isMounted = true;
@@ -314,11 +328,11 @@ const Feed = (props) => {
                     ref={videoRef}
                     resizeMode={Video.RESIZE_MODE_COVER}
                     //shouldPlay={(props.index === props.clip) && pause} 
-                    shouldPlay={!pause}
+                    shouldPlay={(!pause && (screenIsFocused ))}
                     isLooping
-                    //shouldCorrectPitch={true}
-                    //usePoster={true}
-                    //posterSource={{uri: props.image}}
+                    shouldCorrectPitch={true}
+                    usePoster={true}
+                    posterSource={{uri: props.image}}
                     progressUpdateIntervalMillis={50}
                     style={{
                         width: '100%',
